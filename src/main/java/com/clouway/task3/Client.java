@@ -21,10 +21,33 @@ public class Client {
         sc = new Scanner(System.in);
         out = new PrintStream(client.getOutputStream(), true);
 
-        while(true){
-            readFromServer();
-            writeToServer();
-        }
+        new Thread(){
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
+                    try {
+                        readFromServer();
+                    } catch (IOException e) {
+                    }
+                }
+            }
+        }.start();
+        new Thread(){
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
+                    writeToServer();
+                }
+            }
+        }.start();
     }
 
     private void readFromServer() throws IOException {
@@ -34,10 +57,8 @@ public class Client {
     }
 
     private void writeToServer(){
-        if(sc.hasNextLine()){
-            toServer = sc.nextLine();
-            out.println(toServer);
-        }
+        toServer = sc.nextLine();
+        out.println(toServer);
     }
 
 }
