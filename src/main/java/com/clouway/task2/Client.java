@@ -17,5 +17,4 @@ public class Client {
             System.out.println("From server: " + fromServer);
         }
     }
-
 }

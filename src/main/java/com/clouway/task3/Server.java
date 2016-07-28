@@ -12,12 +12,11 @@ public class Server {
 
     private ServerSocket server = null;
     private Socket connection = null;
-    private BufferedReader in = null;
     private List<Socket> clients = null;
     private Clients myClients = null;
 
 
-    public void startServer(int port) throws IOException {
+    public void startServer(int port) throws IOException, InterruptedException {
         server = new ServerSocket(port,100);
         clients = new ArrayList();
         myClients = new Clients(clients);
@@ -47,19 +46,31 @@ public class Server {
     }
 
     private void setupStreams() throws IOException {
-        in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        new Thread(){
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            @Override
+            public void run() {
+                while (true){
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        String fromClient;
+                        if((fromClient = in.readLine()) != null){
+                            System.out.println("From client: " + fromClient);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
 
     private void addClient(Socket client){
         clients.add(client);
-    }
-
-    private void receiveInformation(Socket client) throws IOException {
-        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        String fromClient;
-        if((fromClient = in.readLine()) != null){
-            System.out.println("From client: " + fromClient);
-        }
     }
 
 }

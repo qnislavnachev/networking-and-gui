@@ -8,6 +8,7 @@
 *.war
 *.ear
 
+
 # User-specific stuff:
 out/
 .idea/

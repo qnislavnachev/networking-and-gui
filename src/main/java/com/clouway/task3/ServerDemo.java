@@ -7,10 +7,10 @@ import java.io.IOException;
  */
 public class ServerDemo {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException {
         Server server = new Server();
         try {
-            server.startServer(6789);
+            server.startServer(6791);
         } catch (IOException e) {
             e.printStackTrace();
         }

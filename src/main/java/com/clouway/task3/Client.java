@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
+import static java.lang.Thread.sleep;
+
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
@@ -48,6 +50,14 @@ public class Client {
                 }
             }
         }.start();
+        while(client.isConnected()){
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        throw new NoSocketException();
     }
 
     private void readFromServer() throws IOException {

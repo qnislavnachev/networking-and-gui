@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static java.lang.Thread.sleep;
+
 
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
@@ -24,7 +26,17 @@ public class Server {
             connectionMade();
             setupStreams();
             sendGreeting();
-            System.out.println("Client has disconnected!");
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            connection.close();
+            if(connection.isClosed()){
+                System.out.println("Client is offline!");
+            }else{
+                System.out.println("Client is online!");
+            }
         }
     }
 
@@ -35,7 +47,6 @@ public class Server {
     }
 
     private void connectionMade() throws IOException {
-        System.out.println("Waiting for connection ...");
         connection = server.accept();
         System.out.println("Connected to:" + connection.getInetAddress().getHostName());
     }

@@ -10,7 +10,7 @@ public class ServerDemo {
     public static void main(String[] args){
         Server server = new Server();
         try {
-            server.startServer(6789);
+            server.startServer(6790);
         } catch (IOException e) {
             e.printStackTrace();
         }

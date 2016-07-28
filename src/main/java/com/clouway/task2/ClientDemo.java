@@ -10,7 +10,7 @@ public class ClientDemo {
     public static void main(String[] args){
         Client client = new Client();
         try {
-            client.connect("127.0.0.1", 6789);
+            client.connect("127.0.0.1", 6790);
         } catch (IOException e) {
             e.printStackTrace();
         }
