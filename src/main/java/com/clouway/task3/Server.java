@@ -26,10 +26,6 @@ public class Server {
             public void run() {
                 while(true){
                     try {
-                        sleep(1000);
-                    } catch (InterruptedException e) {
-                    }
-                    try {
                         connectionMade();
                         setupStreams();
                     } catch (IOException e) {
@@ -51,11 +47,6 @@ public class Server {
             @Override
             public void run() {
                 while (true){
-                    try {
-                        sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     try {
                         String fromClient;
                         if((fromClient = in.readLine()) != null){

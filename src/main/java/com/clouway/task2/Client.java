@@ -13,8 +13,17 @@ public class Client {
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         String fromServer;
 
-        while((fromServer = in.readLine()) != null){
+        if((fromServer = in.readLine()) != null){
             System.out.println("From server: " + fromServer);
+        }else{
+            System.out.println("Server is not online!");
+        }
+        client.close();
+
+        if(client.isClosed()){
+            System.out.println("Client is closed!");
+        }else{
+            System.out.println("Client did not close!");
         }
     }
 }

@@ -4,15 +4,11 @@ import com.clouway.task2.Client;
 import com.clouway.task2.ClientInt;
 import com.clouway.task2.Server;
 import com.clouway.task2.ServerInt;
-import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
