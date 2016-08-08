@@ -14,6 +14,7 @@ public class Server {
     private Socket connection = null;
     private List<Socket> clients = null;
     private Clients myClients = null;
+    private boolean closed = true;
 
 
     public void startServer(int port) throws IOException, InterruptedException {
@@ -49,7 +50,7 @@ public class Server {
                 while (true){
                     try {
                         String fromClient;
-                        if((fromClient = in.readLine()) != null){
+                        if(closed && (fromClient = in.readLine()) != null){
                             System.out.println("From client: " + fromClient);
                         }
                     } catch (IOException e) {

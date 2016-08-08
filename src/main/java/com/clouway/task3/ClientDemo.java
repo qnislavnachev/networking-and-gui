@@ -13,6 +13,8 @@ public class ClientDemo {
             client.connect("127.0.0.1", 6791);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NoSocketException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -2,6 +2,8 @@ package com.clouway.task3;
 
 import java.io.IOException;
 
+import static java.lang.Thread.sleep;
+
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */

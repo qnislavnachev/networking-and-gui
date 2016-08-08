@@ -17,7 +17,7 @@ public class Client {
     private String fromServer, toServer;
     private Scanner sc = null;
 
-    public void connect(String host, int port) throws IOException {
+    public void connect(String host, int port) throws IOException, NoSocketException {
         client = new Socket(host,port);
         in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         sc = new Scanner(System.in);
@@ -45,6 +45,7 @@ public class Client {
         while(client.isConnected()){
             try {
                 sleep(1000);
+                System.out.println("Connected!");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
