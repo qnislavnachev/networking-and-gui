@@ -14,7 +14,7 @@ public class Client {
         String fromServer;
 
         if((fromServer = in.readLine()) != null){
-            System.out.println("From server: " + fromServer);
+            System.out.println("Current date: " + fromServer);
         }else{
             System.out.println("Server is not online!");
         }

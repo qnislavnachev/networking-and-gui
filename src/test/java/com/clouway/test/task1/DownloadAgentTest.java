@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.*;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -24,7 +25,7 @@ public class DownloadAgentTest {
         byte[] imageTwo = IOUtils.toByteArray(in);
         in.close();
 
-        assertEquals(imageOne.length, imageTwo.length);
+        assertArrayEquals(imageOne, imageTwo);
+        assertEquals(27, download.getDownloadSize());
     }
-
 }

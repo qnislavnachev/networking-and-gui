@@ -9,7 +9,10 @@ import java.net.URLConnection;
  */
 public class DownloadAgent {
 
+    private int counter;
+
     public void downloadFile(String fileUrl, String targetUrl) throws Exception {
+        counter = 0;
         int marker = fileUrl.lastIndexOf(".");
         String format = fileUrl.substring(marker);
 
@@ -20,11 +23,20 @@ public class DownloadAgent {
 
         int transfer = 0;
         while((transfer = in.read()) != -1){
+            counter++;
+            if(counter >= 1000 && counter % 1000 == 0){
+                System.out.println("Progress: " + getDownloadSize() + "kB");
+            }
             out.write(transfer);
         }
+        System.out.println("Final size: " + getDownloadSize() + "kB");
 
         in.close();
         out.close();
+    }
+
+    public int getDownloadSize(){
+        return (counter / 1000);
     }
 
 }

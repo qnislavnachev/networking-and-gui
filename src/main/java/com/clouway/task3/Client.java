@@ -16,6 +16,7 @@ public class Client {
     private PrintStream out = null;
     private String fromServer, toServer;
     private Scanner sc = null;
+    boolean flag = true;
 
     public void connect(String host, int port) throws IOException, NoSocketException {
         client = new Socket(host,port);
@@ -26,7 +27,7 @@ public class Client {
         new Thread(){
             @Override
             public void run() {
-                while(true){
+                while(flag){
                     try {
                         readFromServer();
                     } catch (IOException e) {
@@ -37,19 +38,21 @@ public class Client {
         new Thread(){
             @Override
             public void run() {
-                while(true){
+                while(flag){
                     writeToServer();
                 }
             }
         }.start();
-        while(client.isConnected()){
+        while(in.read() > (-1)){
             try {
                 sleep(1000);
-                System.out.println("Connected!");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        in.close();
+        out.close();
+        flag = false;
         throw new NoSocketException();
     }
 
