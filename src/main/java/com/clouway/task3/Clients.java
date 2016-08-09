@@ -12,9 +12,11 @@ public class Clients extends Thread {
     private List<Socket> clients;
     private PrintStream out;
     private int size = 0;
+    private Observer observer;
 
-    public Clients(List<Socket> clients){
+    public Clients(List<Socket> clients, Observer observer){
         this.clients = clients;
+        this.observer = observer;
     }
 
     @Override
@@ -39,6 +41,9 @@ public class Clients extends Thread {
         out = new PrintStream(client.getOutputStream(), true);
         out.println(message);
         out.flush();
+        if(!observer.isClientGreeted()){
+            sendGreeting(clients.get((clients.size() - 1)), "Hello, you're client №" + clients.size() + " in the list!");
+        }
     }
 
     private void sendInformation() throws IOException {
@@ -49,6 +54,9 @@ public class Clients extends Thread {
             }
             sendGreeting(each, "There's a new client in the list with №" + (clients.size()) + "!");
             counter++;
+        }
+        if(!observer.isClientInformed()){
+            sendInformation();
         }
     }
 }

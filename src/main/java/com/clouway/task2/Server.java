@@ -3,24 +3,23 @@ package com.clouway.task2;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static java.lang.Thread.sleep;
 
 
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
 public class Server {
-    private Clock clock;
+    private CurrentTimeAndDate currentTimeAndDate;
     private ServerSocket server = null;
     private Socket connection = null;
     private PrintStream out = null;
 
-    public void startServer(int port, Clock clock) throws IOException {
-        this.clock = clock;
+    public Server(CurrentTimeAndDate currentTimeAndDate) {
+        this.currentTimeAndDate = currentTimeAndDate;
+    }
+
+    public void startServer(int port) throws IOException {
         server = new ServerSocket(port);
         new Thread(){
             @Override
@@ -30,8 +29,8 @@ public class Server {
                         connection = server.accept();
                         System.out.println("Connected to:" + connection.getInetAddress().getHostName());
                         out = new PrintStream(connection.getOutputStream());
-
-                        sendGreeting();
+                        Date date = currentTimeAndDate.getTimeAndDate();
+                        out.println(date);
                         connection.close();
                         if(connection.isClosed()){
                             System.out.println("Client is offline!");
@@ -44,11 +43,5 @@ public class Server {
                 }
             }
         }.start();
-    }
-
-    private void sendGreeting() throws IOException {
-        String date = clock.getDate();
-        String time = clock.getTime();
-        out.println("Date: " + date + " Time: " + time);
     }
 }

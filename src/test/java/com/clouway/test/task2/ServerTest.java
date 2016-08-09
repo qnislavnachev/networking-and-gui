@@ -1,6 +1,6 @@
 package com.clouway.test.task2;
 
-import com.clouway.task2.Clock;
+import com.clouway.task2.CurrentTimeAndDate;
 import com.clouway.task2.Server;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -12,6 +12,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertTrue;
@@ -21,20 +24,15 @@ import static org.junit.Assert.assertTrue;
  */
 public class ServerTest {
     @Rule public JUnitRuleMockery context = new JUnitRuleMockery() {{setThreadingPolicy(new Synchroniser());}};
-    Clock clock = context.mock(Clock.class);
+    CurrentTimeAndDate currentTimeAndDate = context.mock(CurrentTimeAndDate.class);
 
-    Server server = new Server();
+    Server server = new Server(currentTimeAndDate);
     String fromServer, result;
 
     public void fakeClient(int port) throws IOException, InterruptedException {
         new Thread() {
             @Override
             public void run() {
-                try {
-                    sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 try {
                     Socket client = new Socket("127.0.0.1", port);
                     BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -50,18 +48,17 @@ public class ServerTest {
     }
 
     @Test
-    public void sendTimeAndDateToClient() throws IOException, InterruptedException {
+    public void sendTimeAndDateToClient() throws IOException, InterruptedException, ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.M.yyyy hh:mm:ss");
+        Date date = dateFormat.parse("01.01.2016 09:24:54");
         context.checking(new Expectations(){{
-            oneOf(clock).getDate();
-            will(returnValue("01.01.2016"));
-
-            oneOf(clock).getTime();
-            will(returnValue("09:24:54"));
+            oneOf(currentTimeAndDate).getTimeAndDate();
+            will(returnValue(date));
         }});
 
         fakeClient(6000);
-        server.startServer(6000, clock);
+        server.startServer(6000);
         sleep(1000);
-        assertTrue(result.equals("Date: 01.01.2016 Time: 09:24:54"));
+        assertTrue(result.equals("Fri Jan 01 09:24:54 EET 2016"));
     }
 }
