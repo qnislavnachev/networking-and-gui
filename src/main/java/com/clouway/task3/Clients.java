@@ -47,7 +47,7 @@ public class Clients extends Thread {
             if(counter == (clients.size()-1)){
                 break;
             }
-            sendGreeting(each, "There's a new client in the list with №" + (clients.size()) + " !");
+            sendGreeting(each, "There's a new client in the list with №" + (clients.size()) + "!");
             counter++;
         }
     }

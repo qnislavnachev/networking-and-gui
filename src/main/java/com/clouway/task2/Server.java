@@ -14,46 +14,41 @@ import static java.lang.Thread.sleep;
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
 public class Server {
-
+    private Clock clock;
     private ServerSocket server = null;
     private Socket connection = null;
     private PrintStream out = null;
 
-
-    public void startServer(int port) throws IOException {
+    public void startServer(int port, Clock clock) throws IOException {
+        this.clock = clock;
         server = new ServerSocket(port);
-        while(true){
-            connectionMade();
-            setupStreams();
-            sendGreeting();
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    while(true){
+                        connection = server.accept();
+                        System.out.println("Connected to:" + connection.getInetAddress().getHostName());
+                        out = new PrintStream(connection.getOutputStream());
+
+                        sendGreeting();
+                        connection.close();
+                        if(connection.isClosed()){
+                            System.out.println("Client is offline!");
+                        }else{
+                            System.out.println("Client is online!");
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            connection.close();
-            if(connection.isClosed()){
-                System.out.println("Client is offline!");
-            }else{
-                System.out.println("Client is online!");
-            }
-        }
+        }.start();
     }
 
     private void sendGreeting() throws IOException {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        out.println("Hello! " + dateFormat.format(date));
+        String date = clock.getDate();
+        String time = clock.getTime();
+        out.println("Date: " + date + " Time: " + time);
     }
-
-    private void connectionMade() throws IOException {
-        connection = server.accept();
-        System.out.println("Connected to:" + connection.getInetAddress().getHostName());
-    }
-
-    private void setupStreams() throws IOException {
-        out = new PrintStream(connection.getOutputStream());
-        out.flush();
-    }
-
 }

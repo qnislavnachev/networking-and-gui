@@ -8,13 +8,13 @@ import java.net.Socket;
  */
 public class Client {
 
-    public void connect(String host, int port) throws IOException {
+    public String connect(String host, int port) throws IOException {
         Socket client = new Socket(host,port);
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         String fromServer;
 
         if((fromServer = in.readLine()) != null){
-            System.out.println("Current date: " + fromServer);
+            return fromServer;
         }else{
             System.out.println("Server is not online!");
         }
@@ -25,5 +25,6 @@ public class Client {
         }else{
             System.out.println("Client did not close!");
         }
+        return null;
     }
 }

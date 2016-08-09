@@ -8,35 +8,38 @@ import java.net.URLConnection;
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
 public class DownloadAgent {
-
+    private ProgressBar progressBar;
     private int counter;
 
-    public void downloadFile(String fileUrl, String targetUrl) throws Exception {
-        counter = 0;
-        int marker = fileUrl.lastIndexOf(".");
-        String format = fileUrl.substring(marker);
+    public DownloadAgent(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
 
-        URL url = new URL(fileUrl);
-        URLConnection urlCon = url.openConnection();
+    public void downloadFile(String url, String dist) throws Exception {
+        int progress;
+        counter = 0;
+        int marker = url.lastIndexOf(".");
+        String format = url.substring(marker);
+
+        URL urlConnection = new URL(url);
+        URLConnection urlCon = urlConnection.openConnection();
         InputStream in = new BufferedInputStream(urlCon.getInputStream());
-        OutputStream out = new BufferedOutputStream( new FileOutputStream(targetUrl + format));
+        OutputStream out = new BufferedOutputStream( new FileOutputStream(dist + format));
 
         int transfer = 0;
         while((transfer = in.read()) != -1){
             counter++;
-            if(counter >= 1000 && counter % 1000 == 0){
-                System.out.println("Progress: " + getDownloadSize() + "kB");
+            if(counter >= 5000 && counter % 5000 == 0){
+                progress = progressBar.getProgress();
+                System.out.println(progress + "% downloaded!");
             }
             out.write(transfer);
         }
-        System.out.println("Final size: " + getDownloadSize() + "kB");
+        progress = progressBar.getProgress();
+        System.out.println(progress + "% downloaded!");
 
         in.close();
         out.close();
-    }
-
-    public int getDownloadSize(){
-        return (counter / 1000);
     }
 
 }
