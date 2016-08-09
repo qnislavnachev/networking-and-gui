@@ -29,7 +29,7 @@ public class Clients extends Thread {
                 }
             }
             try {
-                sleep(1000);
+                sleep(100);
             } catch (InterruptedException e) {
             }
         }
