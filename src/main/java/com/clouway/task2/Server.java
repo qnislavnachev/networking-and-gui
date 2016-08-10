@@ -31,11 +31,11 @@ public class Server {
                     Date date = clock.getTimeAndDate();
                     out.println(date);
                     connection.close();
+                    server.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }.start();
-        server.close();
     }
 }

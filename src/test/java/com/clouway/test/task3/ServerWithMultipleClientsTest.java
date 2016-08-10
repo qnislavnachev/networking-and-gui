@@ -24,10 +24,10 @@ public class ServerWithMultipleClientsTest {
                 try {
                     Socket client = new Socket("127.0.0.1", port);
                     BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                    if((fromServer = in.readLine())!=null)
-                    {
-                        result = fromServer;
-                    }
+                    //if((fromServer = in.readLine())!=null)
+                   // {
+                    //    result = fromServer;
+                   // }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
