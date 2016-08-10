@@ -1,6 +1,6 @@
 package com.clouway.test.task2;
 
-import com.clouway.task2.CurrentTimeAndDate;
+import com.clouway.task2.Clock;
 import com.clouway.task2.Server;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -24,9 +24,9 @@ import static org.junit.Assert.assertTrue;
  */
 public class ServerTest {
     @Rule public JUnitRuleMockery context = new JUnitRuleMockery() {{setThreadingPolicy(new Synchroniser());}};
-    CurrentTimeAndDate currentTimeAndDate = context.mock(CurrentTimeAndDate.class);
+    Clock clock = context.mock(Clock.class);
 
-    Server server = new Server(currentTimeAndDate);
+    Server server = new Server(clock);
     String fromServer, result;
 
     public void fakeClient(int port) throws IOException, InterruptedException {
@@ -52,7 +52,7 @@ public class ServerTest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.M.yyyy hh:mm:ss");
         Date date = dateFormat.parse("01.01.2016 09:24:54");
         context.checking(new Expectations(){{
-            oneOf(currentTimeAndDate).getTimeAndDate();
+            oneOf(clock).getTimeAndDate();
             will(returnValue(date));
         }});
 

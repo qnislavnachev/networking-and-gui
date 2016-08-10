@@ -41,7 +41,7 @@ public class ClientTest {
     public void getTimeAndDateFromServer() throws IOException, InterruptedException {
         fakeServer(6001);
         result = client.connect("127.0.0.1", 6001);
-        
+
         assertTrue(result.equals("Date: 01.01.2016 Time: 09:24:54"));
     }
 }

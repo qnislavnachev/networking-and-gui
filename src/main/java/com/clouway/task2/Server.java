@@ -10,13 +10,13 @@ import java.util.Date;
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
 public class Server {
-    private CurrentTimeAndDate currentTimeAndDate;
+    private Clock clock;
     private ServerSocket server = null;
     private Socket connection = null;
     private PrintStream out = null;
 
-    public Server(CurrentTimeAndDate currentTimeAndDate) {
-        this.currentTimeAndDate = currentTimeAndDate;
+    public Server(Clock clock) {
+        this.clock = clock;
     }
 
     public void startServer(int port) throws IOException {
@@ -25,23 +25,17 @@ public class Server {
             @Override
             public void run() {
                 try {
-                    while(true){
-                        connection = server.accept();
-                        System.out.println("Connected to:" + connection.getInetAddress().getHostName());
-                        out = new PrintStream(connection.getOutputStream());
-                        Date date = currentTimeAndDate.getTimeAndDate();
-                        out.println(date);
-                        connection.close();
-                        if(connection.isClosed()){
-                            System.out.println("Client is offline!");
-                        }else{
-                            System.out.println("Client is online!");
-                        }
-                    }
+                    connection = server.accept();
+                    System.out.println("Connected to:" + connection.getInetAddress().getHostName());
+                    out = new PrintStream(connection.getOutputStream());
+                    Date date = clock.getTimeAndDate();
+                    out.println(date);
+                    connection.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }.start();
+        server.close();
     }
 }
