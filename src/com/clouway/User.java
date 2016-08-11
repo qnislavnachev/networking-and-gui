@@ -11,19 +11,21 @@ import java.net.Socket;
 public class User {
   private String host;
   private Integer port;
-  private Response response;
+  private Display display;
 
-  public User(String host, Integer port, Response response) {
+  public User(String host, Integer port, Display display) {
     this.host = host;
     this.port = port;
-    this.response = response;
+    this.display = display;
   }
 
   public void connectToServer() {
     try {
       Socket socket=new Socket(host,port);
+
       BufferedReader serverInput=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      response.display(serverInput.readLine());
+      display.show(serverInput.readLine());
+
       serverInput.close();
       socket.close();
     } catch (IOException e) {

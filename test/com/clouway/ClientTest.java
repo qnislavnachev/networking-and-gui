@@ -14,48 +14,47 @@ import java.net.Socket;
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
 public class ClientTest {
+
+  class FakeServer implements Runnable {
+    private Integer port;
+
+    public FakeServer(Integer port) {
+      this.port = port;
+    }
+
+    @Override
+    public void run() {
+      try {
+        ServerSocket serverSocket = new ServerSocket(port);
+        while (true) {
+          Socket clientSocket = serverSocket.accept();
+          PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+          output.println("Hello the time is 27.09.1991 09:03");
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+    }
+  }
   JUnitRuleMockery context = new JUnitRuleMockery() {{
     setThreadingPolicy(new Synchroniser());
   }};
 
-  Response response = context.mock(Response.class);
+  Display display = context.mock(Display.class);
 
-  User user = new User("", 8000, response);
+  User user = new User("", 8000, display);
   FakeServer fakeServer = new FakeServer(8000);
 
   @Test
   public void happyPath() throws Exception {
     Thread serverThread = new Thread(fakeServer);
+
     context.checking(new Expectations() {{
-      oneOf(response).display("Hello the time is 27.09.1991 09:03");
-      will(returnValue("Hello the time is 27.09.1991 09:03"));
+      oneOf(display).show("Hello the time is 27.09.1991 09:03");
     }});
 
     serverThread.start();
     user.connectToServer();
-  }
-}
-
-
-class FakeServer implements Runnable {
-  private Integer port;
-
-  public FakeServer(Integer port) {
-    this.port = port;
-  }
-
-  @Override
-  public void run() {
-    try {
-      ServerSocket serverSocket = new ServerSocket(port);
-      while (true) {
-        Socket clientSocket = serverSocket.accept();
-        PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-        output.println("Hello the time is 27.09.1991 09:03");
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
   }
 }
