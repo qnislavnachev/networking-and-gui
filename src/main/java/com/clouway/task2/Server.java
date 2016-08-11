@@ -14,9 +14,11 @@ public class Server {
     private ServerSocket server = null;
     private Socket connection = null;
     private PrintStream out = null;
+    private Screen screen;
 
-    public Server(Clock clock) {
+    public Server(Clock clock, Screen screen) {
         this.clock = clock;
+        this.screen = screen;
     }
 
     public void startServer(int port) throws IOException {
@@ -26,10 +28,10 @@ public class Server {
             public void run() {
                 try {
                     connection = server.accept();
-                    System.out.println("Connected to:" + connection.getInetAddress().getHostName());
                     out = new PrintStream(connection.getOutputStream());
                     Date date = clock.getTimeAndDate();
                     out.println(date);
+                    screen.display("Time and date send!");
                     connection.close();
                     server.close();
                 } catch (IOException e) {

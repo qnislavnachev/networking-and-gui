@@ -15,18 +15,19 @@ public class Server {
     private List<Socket> clients = null;
     private Clients myClients = null;
 
-    public void startServer(int port) throws IOException, InterruptedException {
+    public synchronized void startServer(int port, boolean flag) throws IOException, InterruptedException {
         server = new ServerSocket(port,100);
         clients = new ArrayList();
         myClients = new Clients(clients);
         myClients.start();
+
         new Thread(){
             @Override
             public void run() {
                 while(true){
                     try {
                         connection = server.accept();
-                        setupStreams();
+                        //setupStreams();
                         clients.add(connection);
                     } catch (IOException e) {
                     }
