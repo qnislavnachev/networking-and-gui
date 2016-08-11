@@ -20,18 +20,18 @@ import static org.junit.Assert.assertTrue;
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
 public class ClientTest {
-    Synchroniser synchroniser = new Synchroniser();
+    private  Synchroniser synchroniser = new Synchroniser();
     @Rule
     public JUnitRuleMockery context = new JUnitRuleMockery() {{
-        setThreadingPolicy(synchroniser);
+             setThreadingPolicy(synchroniser);
     }};
-    Screen screen = context.mock(Screen.class);
+    private Screen screen = context.mock(Screen.class);
 
-    Client client = new Client(screen);
-    FakeServer server = new FakeServer();
+    private Client client = new Client(screen);
+    private FakeServer server = new FakeServer();
 
     class FakeServer {
-        public void startServer(int port) {
+        public void start(int port) {
             new Thread() {
                 @Override
                 public void run() {
@@ -58,7 +58,7 @@ public class ClientTest {
             oneOf(screen).display("Date: 01.01.2016 Time: 09:24:54");
             then(states.is("Connected!"));
         }});
-        server.startServer(6001);
+        server.start(6001);
         client.connect("127.0.0.1", 6001);
         synchroniser.waitUntil(states.is("Connected!"));
         assertTrue(client.getMessage().equals("Date: 01.01.2016 Time: 09:24:54"));

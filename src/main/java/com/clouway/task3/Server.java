@@ -22,7 +22,7 @@ public class Server {
     public void startServer(int port) throws IOException, InterruptedException {
         server = new ServerSocket(port, 100);
         clients = new ArrayList();
-        myClients = new Clients(clients);
+        myClients = new Clients(clients);//todo
         myClients.start();
 
         new Thread() {

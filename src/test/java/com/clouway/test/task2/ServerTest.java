@@ -18,23 +18,22 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertTrue;
 
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
 public class ServerTest {
-    Synchroniser synchroniser = new Synchroniser();
+    private Synchroniser synchroniser = new Synchroniser();
     @Rule
     public JUnitRuleMockery context = new JUnitRuleMockery() {{
         setThreadingPolicy(synchroniser);
     }};
-    Clock clock = context.mock(Clock.class);
-    Screen screen = context.mock(Screen.class);
+    private Clock clock = context.mock(Clock.class);
+    private Screen screen = context.mock(Screen.class);
 
-    Server server = new Server(clock, screen);
-    FakeClient client = new FakeClient(screen);
+    private Server server = new Server(clock, screen);
+    private FakeClient client = new FakeClient(screen);
 
     class FakeClient {
         private String message;
@@ -56,7 +55,6 @@ public class ServerTest {
                         if ((fromServer = in.readLine()) != null) {
                             message = fromServer;
                             screen.display("Time and date received!");
-
                         }
                         client.close();
                     } catch (IOException e) {
@@ -75,6 +73,7 @@ public class ServerTest {
     public void happyPath() throws IOException, InterruptedException, ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.M.yyyy hh:mm:ss");
         Date date = dateFormat.parse("01.01.2016 09:24:54");
+
         States connecting = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(clock).getTimeAndDate();

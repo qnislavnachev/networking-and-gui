@@ -21,10 +21,10 @@ public class Server {
 
     public void start(int port) throws IOException {
         ServerSocket server = new ServerSocket(port);
-        new Thread() {
+        new Thread(){
             @Override
             public void run() {
-                try {
+                try  {
                     connection = server.accept();
                     PrintStream out = new PrintStream(connection.getOutputStream());
                     Date date = clock.getTimeAndDate();
