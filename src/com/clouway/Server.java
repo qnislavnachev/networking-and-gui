@@ -11,6 +11,7 @@ import java.net.Socket;
 public class Server implements Runnable {
   private Integer port;
   private String message;
+  private ConnectedUsers connectedUsers;
 
   public Server(Integer port, String message) {
     this.port = port;
@@ -24,7 +25,7 @@ public class Server implements Runnable {
       while (true) {
         Socket clientSocket = serverSocket.accept();
         PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-        output.println(message );
+        output.println(message);
       }
     } catch (IOException e) {
       e.printStackTrace();

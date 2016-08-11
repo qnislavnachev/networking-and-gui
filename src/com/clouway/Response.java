@@ -3,5 +3,6 @@ package com.clouway;
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
-public class Response {
+public interface Response {
+  String display(String message);
 }
