@@ -27,7 +27,9 @@ import static org.junit.Assert.assertTrue;
 public class ServerTest {
     Synchroniser synchroniser = new Synchroniser();
     @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery() {{setThreadingPolicy(synchroniser);}};
+    public JUnitRuleMockery context = new JUnitRuleMockery() {{
+        setThreadingPolicy(synchroniser);
+    }};
     Clock clock = context.mock(Clock.class);
     Screen screen = context.mock(Screen.class);
 
@@ -37,11 +39,13 @@ public class ServerTest {
     class FakeClient {
         private String message;
         private Screen screen;
-        public FakeClient(Screen screen){
+
+        public FakeClient(Screen screen) {
             this.screen = screen;
         }
-        public void connect(String host,int port) throws InterruptedException {
-            new Thread(){
+
+        public void connect(String host, int port) throws InterruptedException {
+            new Thread() {
                 @Override
                 public void run() {
                     String fromServer;
@@ -49,8 +53,7 @@ public class ServerTest {
                     try {
                         client = new Socket(host, port);
                         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                        if((fromServer = in.readLine())!=null)
-                        {
+                        if ((fromServer = in.readLine()) != null) {
                             message = fromServer;
                             screen.display("Time and date received!");
 
@@ -62,6 +65,7 @@ public class ServerTest {
                 }
             }.start();
         }
+
         public String getMessage() throws InterruptedException {
             return message;
         }
@@ -72,14 +76,14 @@ public class ServerTest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.M.yyyy hh:mm:ss");
         Date date = dateFormat.parse("01.01.2016 09:24:54");
         States connecting = context.states("Waiting for connection!");
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
             oneOf(clock).getTimeAndDate();
             will(returnValue(date));
             oneOf(screen).display("Time and date send!");
             oneOf(screen).display("Time and date received!");
             then(connecting.is("Information received!"));
         }});
-        server.startServer(6000);
+        server.start(6000);
         client.connect("127.0.0.1", 6000);
         synchroniser.waitUntil(connecting.is("Information received!"));
         assertTrue(client.getMessage().equals("Fri Jan 01 09:24:54 EET 2016"));

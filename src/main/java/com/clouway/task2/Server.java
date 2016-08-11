@@ -11,9 +11,7 @@ import java.util.Date;
  */
 public class Server {
     private Clock clock;
-    private ServerSocket server = null;
     private Socket connection = null;
-    private PrintStream out = null;
     private Screen screen;
 
     public Server(Clock clock, Screen screen) {
@@ -21,17 +19,18 @@ public class Server {
         this.screen = screen;
     }
 
-    public void startServer(int port) throws IOException {
-        server = new ServerSocket(port);
-        new Thread(){
+    public void start(int port) throws IOException {
+        ServerSocket server = new ServerSocket(port);
+        new Thread() {
             @Override
             public void run() {
                 try {
                     connection = server.accept();
-                    out = new PrintStream(connection.getOutputStream());
+                    PrintStream out = new PrintStream(connection.getOutputStream());
                     Date date = clock.getTimeAndDate();
                     out.println(date);
                     screen.display("Time and date send!");
+                    out.close();
                     connection.close();
                     server.close();
                 } catch (IOException e) {

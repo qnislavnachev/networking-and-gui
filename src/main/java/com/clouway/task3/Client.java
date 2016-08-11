@@ -10,61 +10,76 @@ import static java.lang.Thread.sleep;
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
 public class Client {
-
-    private Socket client = null;
     private BufferedReader in = null;
     private PrintStream out = null;
-    private String fromServer, toServer;
-    private Scanner sc = null;
-    boolean flag = true;
+    private Scanner sc = new Scanner(System.in);
+    private Screen screen;
+
+    public Client(Screen screen) {
+        this.screen = screen;
+    }
 
     public void connect(String host, int port) throws IOException, NoSocketException {
-        client = new Socket(host,port);
+        Socket client = new Socket(host, port);
         in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        sc = new Scanner(System.in);
         out = new PrintStream(client.getOutputStream(), true);
+        screen.display("Connection established!");
 
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
-                while(flag){
+                while (true) {
                     try {
-                        readFromServer();
+                        hasReceivedMessage();
                     } catch (IOException e) {
                     }
                 }
             }
         }.start();
-        new Thread(){
+        /*new Thread() {
             @Override
             public void run() {
-                while(flag){
+                while (true) {
                     writeToServer();
                 }
             }
-        }.start();
-        while(in.read() > (-1)){
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        }.start();*/
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (in.read() > (-1)) {
+                        try {
+                            sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    in.close();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    throw new NoSocketException();
+                } catch (NoSocketException e) {
+                    System.out.println("Server is offline");
+                }
             }
-        }
-        in.close();
-        out.close();
-        flag = false;
-        throw new NoSocketException();
+        }.start();
     }
 
-    private void readFromServer() throws IOException {
-        if((fromServer = in.readLine()) != null) {
+    public void hasReceivedMessage() throws IOException {
+        String fromServer;
+        if ((fromServer = in.readLine()) != null) {
             System.out.println("From server: " + fromServer);
         }
     }
 
-    private void writeToServer(){
+    /*private void writeToServer() {
+        String toServer;
         toServer = sc.nextLine();
         out.println(toServer);
-    }
+    }*/
 
 }

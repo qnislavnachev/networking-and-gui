@@ -22,14 +22,16 @@ import static org.junit.Assert.assertTrue;
 public class ClientTest {
     Synchroniser synchroniser = new Synchroniser();
     @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery() {{setThreadingPolicy(synchroniser);}};
+    public JUnitRuleMockery context = new JUnitRuleMockery() {{
+        setThreadingPolicy(synchroniser);
+    }};
     Screen screen = context.mock(Screen.class);
 
     Client client = new Client(screen);
     FakeServer server = new FakeServer();
 
-    class FakeServer{
-        public void startServer(int port){
+    class FakeServer {
+        public void startServer(int port) {
             new Thread() {
                 @Override
                 public void run() {
@@ -39,8 +41,7 @@ public class ClientTest {
                         Socket connection = null;
                         PrintStream out = null;
                         connection = server.accept();
-                        out = new PrintStream(connection.getOutputStream()
-                        );
+                        out = new PrintStream(connection.getOutputStream());
                         out.println("Date: 01.01.2016 Time: 09:24:54");
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -53,7 +54,7 @@ public class ClientTest {
     @Test
     public void happyPath() throws IOException, InterruptedException {
         final States states = context.states("Waiting for connection!");
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
             oneOf(screen).display("Date: 01.01.2016 Time: 09:24:54");
             then(states.is("Connected!"));
         }});

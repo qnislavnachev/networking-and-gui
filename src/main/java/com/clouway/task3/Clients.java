@@ -13,13 +13,13 @@ public class Clients extends Thread {
     private PrintStream out;
     private int size = 0;
 
-    public Clients(List<Socket> clients){
+    public Clients(List<Socket> clients) {
         this.clients = clients;
     }
 
     @Override
     public void run() {
-        while(true) {
+        while (true) {
             if (size != clients.size()) {
                 try {
                     sendGreeting(clients.get((clients.size() - 1)), "Hello, you're client №" + clients.size() + " in the list!");
@@ -44,8 +44,8 @@ public class Clients extends Thread {
 
     private void sendInformation() throws IOException {
         int counter = 0;
-        for (Socket each: clients) {
-            if(counter == (clients.size()-1)){
+        for (Socket each : clients) {
+            if (counter == (clients.size() - 1)) {
                 break;
             }
             sendGreeting(each, "There's a new client in the list with №" + (clients.size()) + "!");

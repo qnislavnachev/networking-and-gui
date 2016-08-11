@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
@@ -14,19 +13,25 @@ public class Server {
     private Socket connection = null;
     private List<Socket> clients = null;
     private Clients myClients = null;
+    private Screen screen;
 
-    public synchronized void startServer(int port, boolean flag) throws IOException, InterruptedException {
-        server = new ServerSocket(port,100);
+    public Server(Screen screen) {
+        this.screen = screen;
+    }
+
+    public void startServer(int port) throws IOException, InterruptedException {
+        server = new ServerSocket(port, 100);
         clients = new ArrayList();
         myClients = new Clients(clients);
         myClients.start();
 
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
-                while(true){
+                while (true) {
                     try {
                         connection = server.accept();
+                        screen.display("Client has connected!");
                         //setupStreams();
                         clients.add(connection);
                     } catch (IOException e) {
@@ -37,8 +42,9 @@ public class Server {
     }
 
     private void setupStreams() throws IOException {
-        new Thread(){
+        new Thread() {
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
             @Override
             public void run() {
                 while (true) {

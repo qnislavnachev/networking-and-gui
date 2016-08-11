@@ -26,8 +26,7 @@ public class Client {
                 try {
                     client = new Socket(host, port);
                     BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                    if((fromServer = in.readLine())!=null)
-                    {
+                    if((fromServer = in.readLine())!=null) {
                         message = fromServer;
                         screen.display(message);
                     }
