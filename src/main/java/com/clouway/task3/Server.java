@@ -14,6 +14,8 @@ public class Server {
     private List<Socket> clients = null;
     private PrintStream out = null;
     private Screen screen;
+    private String greeting = "Hello, you're client №";
+    private String info = "There's a new client in the list with №";
 
     public Server(Screen screen) {
         this.screen = screen;
@@ -51,6 +53,7 @@ public class Server {
 
     private void sendGreeting(Socket client, String message) throws IOException {
         out = new PrintStream(client.getOutputStream(), true);
+        screen.display(message);
         out.println(message);
         out.flush();
     }
@@ -58,13 +61,12 @@ public class Server {
     private void sendInformation() {
       for (int i = 0; i < (clients.size() - 1); i++) {
           try {
-              sendGreeting(clients.get(i), "There's a new client in the list with №" + (clients.size()) + "!");
+              sendGreeting(clients.get(i), info + (clients.size()));
           } catch (IOException e) {
           }
       }
       try {
-          sendGreeting(clients.get((clients.size() - 1)), "Hello, you're client №" + clients.size() + " in the list!");
-          screen.display("Hello, you're client №" + clients.size() + " in the list!");
+          sendGreeting(clients.get((clients.size() - 1)), greeting + clients.size());
       } catch (IOException e) {
       }
     }

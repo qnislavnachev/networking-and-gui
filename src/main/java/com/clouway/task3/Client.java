@@ -22,7 +22,7 @@ public class Client {
             @Override
             public void run() {
                 try {
-                    hasReceivedMessage();
+                    receiveMessage();
                 } catch (IOException e) {
                 } catch (NoSocketException e) {
                     screen.display("Server is offline!");
@@ -31,7 +31,7 @@ public class Client {
         }.start();
     }
 
-    private void hasReceivedMessage() throws IOException, NoSocketException {
+    private void receiveMessage() throws IOException, NoSocketException {
         String fromServer;
         while ((fromServer = in.readLine()) != null) {
             screen.display(fromServer);

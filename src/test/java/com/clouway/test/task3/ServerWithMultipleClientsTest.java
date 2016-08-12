@@ -50,7 +50,7 @@ public class ServerWithMultipleClientsTest {
     public void happyPath() throws IOException, InterruptedException {
         final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
-            oneOf(screen).display("Hello, you're client №1 in the list!");
+            oneOf(screen).display("Hello, you're client №1");
             then(state.is("Successful connection!"));
         }});
         server.start(6003);
@@ -62,9 +62,12 @@ public class ServerWithMultipleClientsTest {
     public void multipleConnections() throws IOException, InterruptedException {
         final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
-            oneOf(screen).display("Hello, you're client №1 in the list!");
-            oneOf(screen).display("Hello, you're client №2 in the list!");
-            oneOf(screen).display("Hello, you're client №3 in the list!");
+            oneOf(screen).display("Hello, you're client №1");
+            oneOf(screen).display("There's a new client in the list with №2");
+            oneOf(screen).display("Hello, you're client №2");
+            oneOf(screen).display("There's a new client in the list with №3");
+            oneOf(screen).display("There's a new client in the list with №3");
+            oneOf(screen).display("Hello, you're client №3");
             then(state.is("Successful connection!"));
         }});
         server.start(6002);
@@ -78,7 +81,7 @@ public class ServerWithMultipleClientsTest {
     public void closingServer() throws InterruptedException, IOException {
         final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
-            oneOf(screen).display("Hello, you're client №1 in the list!");
+            oneOf(screen).display("Hello, you're client №1");
             then(state.is("Successful connection!"));
             oneOf(screen).display("Connection to clients is closed!");
             oneOf(screen).display("Stream to clients is closed!");

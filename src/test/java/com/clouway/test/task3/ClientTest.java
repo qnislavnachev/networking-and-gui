@@ -104,7 +104,7 @@ public class ClientTest {
     }
 
     @Test
-    public void serverGoesOffline() throws IOException, InterruptedException {
+    public void server() throws IOException, InterruptedException {
         FakeServer badServer = new FakeServer();
         Client client = new Client(screen);
         final States state = context.states("Connecting...");
