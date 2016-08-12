@@ -33,9 +33,12 @@ public class Client {
 
     private void receiveMessage() throws IOException, NoSocketException {
         String fromServer;
-        while ((fromServer = in.readLine()) != null) {
-            screen.display(fromServer);
+        while (true) {
+            if((fromServer = in.readLine()) != null) {
+                screen.display(fromServer);
+            }else{
+                throw new NoSocketException();
+            }
         }
-        throw new NoSocketException();
     }
 }
