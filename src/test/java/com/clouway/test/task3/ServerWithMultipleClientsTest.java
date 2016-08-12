@@ -47,7 +47,7 @@ public class ServerWithMultipleClientsTest {
     }
 
     @Test
-    public void happyPath() throws IOException, InterruptedException, NoSocketException {
+    public void happyPath() throws IOException, InterruptedException {
         final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client №1 in the list!");
@@ -59,7 +59,7 @@ public class ServerWithMultipleClientsTest {
     }
 
     @Test
-    public void multipleConnections() throws IOException, InterruptedException, NoSocketException {
+    public void multipleConnections() throws IOException, InterruptedException {
         final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client №1 in the list!");
@@ -75,7 +75,7 @@ public class ServerWithMultipleClientsTest {
     }
 
     @Test
-    public void closingServer() throws InterruptedException, IOException, NoSocketException {
+    public void closingServer() throws InterruptedException, IOException {
         final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client №1 in the list!");

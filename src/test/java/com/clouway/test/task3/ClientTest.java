@@ -75,7 +75,7 @@ public class ClientTest {
     }
 
     @Test
-    public void happyPath() throws IOException, NoSocketException, InterruptedException {
+    public void happyPath() throws IOException, InterruptedException {
         final States state = context.states("Connecting...");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client number №1");
@@ -87,7 +87,7 @@ public class ClientTest {
     }
 
     @Test
-    public void multipleConnections() throws IOException, NoSocketException, InterruptedException {
+    public void multipleConnections() throws IOException, InterruptedException {
         final States state = context.states("Connecting...");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client number №1");
@@ -104,7 +104,7 @@ public class ClientTest {
     }
 
     @Test
-    public void serverGoesOffline() throws IOException, NoSocketException, InterruptedException {
+    public void serverGoesOffline() throws IOException, InterruptedException {
         FakeServer badServer = new FakeServer();
         Client client = new Client(screen);
         final States state = context.states("Connecting...");

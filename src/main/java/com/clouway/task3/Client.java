@@ -14,7 +14,7 @@ public class Client {
         this.screen = screen;
     }
 
-    public void connect(String host, int port) throws IOException, NoSocketException {
+    public void connect(String host, int port) throws IOException {
         Socket client = new Socket(host, port);
         in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 

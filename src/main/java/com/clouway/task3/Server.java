@@ -32,14 +32,13 @@ public class Server {
                         clients.add(connection);
                         sendInformation();
                     } catch (IOException e) {
-                    } catch (NoSocketException e) {
                     }
                 }
             }
         }.start();
     }
 
-    public void stop() throws IOException, NoSocketException {
+    public void stop() throws IOException {
         for (int i = 0; i < (clients.size() - 1); i++) {
             clients.get(i).close();
         }
@@ -56,7 +55,7 @@ public class Server {
         out.flush();
     }
 
-    private void sendInformation() throws NoSocketException {
+    private void sendInformation() {
       for (int i = 0; i < (clients.size() - 1); i++) {
           try {
               sendGreeting(clients.get(i), "There's a new client in the list with №" + (clients.size()) + "!");
