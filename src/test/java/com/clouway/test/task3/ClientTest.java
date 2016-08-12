@@ -17,42 +17,50 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
 public class ClientTest {
-    Synchroniser synchroniser = new Synchroniser();
+    private Synchroniser synchroniser = new Synchroniser();
     @Rule
     public JUnitRuleMockery context = new JUnitRuleMockery() {{
         setThreadingPolicy(synchroniser);
     }};
-    Screen screen = context.mock(Screen.class);
-    FakeServer server = new FakeServer();
-    Client firstClient = new Client(screen);
-    Client secondClient = new Client(screen);
+    private Screen screen = context.mock(Screen.class);
+    private FakeServer server = new FakeServer();
+    private Client firstClient = new Client(screen);
+    private Client secondClient = new Client(screen);
 
     class FakeServer {
         private List<Socket> clients = new ArrayList();
         private Socket connection = null;
+        private ServerSocket server;
+        private boolean isUp = true;
 
         public void start(int port) throws IOException {
-            ServerSocket server = new ServerSocket(port);
+            server = new ServerSocket(port);
             new Thread() {
                 @Override
                 public void run() {
-                    while (true) {
+                    while (isUp) {
                         try {
                             connection = server.accept();
                             clients.add(connection);
                             sendMessages();
                         } catch (IOException e) {
-                            e.printStackTrace();
                         }
                     }
                 }
             }.start();
+        }
+
+        public void stop() throws IOException {
+            connection.close();
+            for (int i = 0; i < (clients.size() - 1); i++) {
+                clients.get(i).close();
+            }
+            server.close();
+            isUp = false;
         }
 
         private void sendMessages() throws IOException {
@@ -62,16 +70,30 @@ public class ClientTest {
                 out = new PrintStream(clients.get(i).getOutputStream());
                 out.println("There's a new client in the list with №" + (clients.size()));
             }
+            out.close();
         }
     }
 
     @Test
-    public void happyPath() throws IOException, NoSocketException, InterruptedException {
+    public void happyPathWithOneClient() throws IOException, NoSocketException, InterruptedException {
         final States state = context.states("Connecting...");
         context.checking(new Expectations() {{
-            oneOf(screen).display("Connection established!");
+            oneOf(screen).display("Hello, you're client number №1");
             then(state.is("First client connected!"));
-            oneOf(screen).display("Connection established!");
+        }});
+        server.start(6001);
+        firstClient.connect("127.0.0.1", 6001);
+        synchroniser.waitUntil(state.is("First client connected!"));
+    }
+
+    @Test
+    public void happyPathWithMoreThanOneClient() throws IOException, NoSocketException, InterruptedException {
+        final States state = context.states("Connecting...");
+        context.checking(new Expectations() {{
+            oneOf(screen).display("Hello, you're client number №1");
+            then(state.is("First client connected!"));
+            oneOf(screen).display("There's a new client in the list with №2");
+            oneOf(screen).display("Hello, you're client number №2");
             then(state.is("Second client connected!"));
         }});
         server.start(6000);
@@ -79,5 +101,22 @@ public class ClientTest {
         synchroniser.waitUntil(state.is("First client connected!"));
         secondClient.connect("127.0.0.1", 6000);
         synchroniser.waitUntil(state.is("Second client connected!"));
+    }
+
+    @Test
+    public void serverGoesOffline() throws IOException, NoSocketException, InterruptedException {
+        FakeServer badServer = new FakeServer();
+        Client client = new Client(screen);
+        final States state = context.states("Connecting...");
+        context.checking(new Expectations() {{
+            oneOf(screen).display("Hello, you're client number №1");
+            then(state.is("First client connected!"));
+            oneOf(screen).display(null);
+            will(throwException(new NoSocketException()));
+        }});
+        badServer.start(6005);
+        client.connect("127.0.0.1", 6005);
+        synchroniser.waitUntil(state.is("First client connected!"));
+        badServer.stop();
     }
 }

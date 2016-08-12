@@ -16,7 +16,7 @@ public class Client {
         this.screen = screen;
     }
 
-    public void connect(String host, int port) throws InterruptedException {
+    public void connect(final String host, final int port) throws InterruptedException {
         new Thread() {
             @Override
             public void run() {

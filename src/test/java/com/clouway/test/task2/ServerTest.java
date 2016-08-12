@@ -43,7 +43,7 @@ public class ServerTest {
             this.screen = screen;
         }
 
-        public void connect(String host, int port) throws InterruptedException {
+        public void connect(final String host, final int port) throws InterruptedException {
             new Thread() {
                 @Override
                 public void run() {
@@ -72,9 +72,9 @@ public class ServerTest {
     @Test
     public void happyPath() throws IOException, InterruptedException, ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.M.yyyy hh:mm:ss");
-        Date date = dateFormat.parse("01.01.2016 09:24:54");
+        final Date date = dateFormat.parse("01.01.2016 09:24:54");
 
-        States connecting = context.states("Waiting for connection!");
+        final States connecting = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(clock).getTimeAndDate();
             will(returnValue(date));

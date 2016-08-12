@@ -31,7 +31,7 @@ public class ClientTest {
     private FakeServer server = new FakeServer();
 
     class FakeServer {
-        public void start(int port) {
+        public void start(final int port) {
             new Thread() {
                 @Override
                 public void run() {
