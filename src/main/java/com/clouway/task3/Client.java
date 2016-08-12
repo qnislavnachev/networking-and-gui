@@ -25,7 +25,7 @@ public class Client {
                     hasReceivedMessage();
                 } catch (IOException e) {
                 } catch (NoSocketException e) {
-                    System.out.println("Server is offline!");
+                    screen.display("Server is offline!");
                 }
             }
         }.start();
@@ -36,6 +36,6 @@ public class Client {
         while ((fromServer = in.readLine()) != null) {
             screen.display(fromServer);
         }
-        screen.display(null);
+        throw new NoSocketException();
     }
 }

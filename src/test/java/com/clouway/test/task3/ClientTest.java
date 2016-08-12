@@ -110,8 +110,7 @@ public class ClientTest {
         final States state = context.states("Connecting...");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client number №1");
-            oneOf(screen).display(null);
-            will(throwException(new NoSocketException()));
+            oneOf(screen).display("Server is offline!");
             then(state.is("Error, server will stop now"));
         }});
         badServer.start(6005);
