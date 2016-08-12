@@ -7,7 +7,6 @@ import java.net.Socket;
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */
 public class Client {
-    private BufferedReader in = null;
     private Screen screen;
 
     public Client(Screen screen) {
@@ -16,13 +15,13 @@ public class Client {
 
     public void connect(String host, int port) throws IOException {
         Socket client = new Socket(host, port);
-        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        BufferedReader input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
         new Thread() {
             @Override
             public void run() {
                 try {
-                    receiveMessage();
+                    listen(input);
                 } catch (IOException e) {
                 } catch (NoSocketException e) {
                     screen.display("Server is offline!");
@@ -31,7 +30,7 @@ public class Client {
         }.start();
     }
 
-    private void receiveMessage() throws IOException, NoSocketException {
+    private void listen(BufferedReader in) throws IOException, NoSocketException {
         String fromServer;
         while (true) {
             if((fromServer = in.readLine()) != null) {

@@ -32,6 +32,7 @@ public class ClientTest {
     private Client secondClient = new Client(screen);
 
     class FakeServer {
+
         private List<Socket> clients = new ArrayList();
         private Socket connection;
         private ServerSocket server;
@@ -104,8 +105,8 @@ public class ClientTest {
     }
 
     @Test
-    public void server() throws IOException, InterruptedException {
-        FakeServer badServer = new FakeServer();
+    public void serverStop() throws IOException, InterruptedException {
+        FakeServer server = new FakeServer();
         Client client = new Client(screen);
         final States state = context.states("Connecting...");
         context.checking(new Expectations() {{
@@ -113,9 +114,9 @@ public class ClientTest {
             oneOf(screen).display("Server is offline!");
             then(state.is("Error, server will stop now"));
         }});
-        badServer.start(6005);
+        server.start(6005);
         client.connect("127.0.0.1", 6005);
-        badServer.stop();
+        server.stop();
         synchroniser.waitUntil(state.is("Error, server will stop now"));
     }
 }

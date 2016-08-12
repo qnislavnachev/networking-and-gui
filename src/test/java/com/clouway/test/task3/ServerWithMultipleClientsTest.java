@@ -65,15 +65,12 @@ public class ServerWithMultipleClientsTest {
             oneOf(screen).display("Hello, you're client №1");
             oneOf(screen).display("There's a new client in the list with №2");
             oneOf(screen).display("Hello, you're client №2");
-            oneOf(screen).display("There's a new client in the list with №3");
-            oneOf(screen).display("There's a new client in the list with №3");
-            oneOf(screen).display("Hello, you're client №3");
             then(state.is("Successful connection!"));
         }});
         server.start(6002);
         clientOne.connect("127.0.0.1", 6002);
         clientTwo.connect("127.0.0.1", 6002);
-        clientThree.connect("127.0.0.1", 6002);
+
         synchroniser.waitUntil(state.is("Successful connection!"));
     }
 
@@ -88,6 +85,7 @@ public class ServerWithMultipleClientsTest {
             oneOf(screen).display("Server is closed!");
             then(state.is("Server is offline!"));
         }});
+
         server.start(6004);
         clientOne.connect("127.0.0.1", 6004);
         synchroniser.waitUntil(state.is("Successful connection!"));
