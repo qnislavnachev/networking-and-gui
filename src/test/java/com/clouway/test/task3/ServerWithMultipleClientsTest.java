@@ -13,9 +13,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.Socket;
 
-import static java.lang.Thread.sleep;
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
  */

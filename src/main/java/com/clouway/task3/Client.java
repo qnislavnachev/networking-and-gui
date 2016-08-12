@@ -2,7 +2,6 @@ package com.clouway.task3;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
  * @author Borislav Gadjev <gadjevb@gmail.com>
@@ -30,14 +29,6 @@ public class Client {
                 }
             }
         }.start();
-        /*new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    writeToServer();
-                }
-            }
-        }.start();*/
     }
 
     private void hasReceivedMessage() throws IOException, NoSocketException {
@@ -47,11 +38,4 @@ public class Client {
         }
         screen.display(null);
     }
-
-    /*private void writeToServer() {
-        String toServer;
-        toServer = sc.nextLine();
-        out.println(toServer);
-    }*/
-
 }

@@ -19,7 +19,7 @@ public class Server {
         this.screen = screen;
     }
 
-    public void start(int port) throws IOException, InterruptedException {
+    public void start(int port) throws IOException {
         server = new ServerSocket(port, 100);
         clients = new ArrayList();
 
@@ -29,7 +29,6 @@ public class Server {
                 while (true) {
                     try {
                         connection = server.accept();
-                        //setupStreams();
                         clients.add(connection);
                         sendInformation();
                     } catch (IOException e) {
@@ -69,25 +68,5 @@ public class Server {
           screen.display("Hello, you're client №" + clients.size() + " in the list!");
       } catch (IOException e) {
       }
-    }
-
-    private void setupStreams() throws IOException {
-        new Thread() {
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        String fromClient;
-                        if ((fromClient = in.readLine()) != null) {
-                            System.out.println("From client: " + fromClient);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }.start();
     }
 }

@@ -33,7 +33,7 @@ public class ClientTest {
 
     class FakeServer {
         private List<Socket> clients = new ArrayList();
-        private Socket connection = null;
+        private Socket connection;
         private ServerSocket server;
         private boolean isUp = true;
         private PrintStream out = null;
@@ -56,10 +56,10 @@ public class ClientTest {
         }
 
         public void stop() throws IOException {
-            connection.close();
             for (int i = 0; i < (clients.size() - 1); i++) {
                 clients.get(i).close();
             }
+            connection.close();
             server.close();
             isUp = false;
         }
