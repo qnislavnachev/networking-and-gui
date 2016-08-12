@@ -22,13 +22,11 @@ public class Client {
         new Thread() {
             @Override
             public void run() {
-                while (true) {
-                    try {
-                        hasReceivedMessage();
-                    } catch (IOException e) {
-                    } catch (NoSocketException e) {
-                        System.out.println("Server is offline!");
-                    }
+                try {
+                    hasReceivedMessage();
+                } catch (IOException e) {
+                } catch (NoSocketException e) {
+                    System.out.println("Server is offline!");
                 }
             }
         }.start();
@@ -43,10 +41,11 @@ public class Client {
     }
 
     private void hasReceivedMessage() throws IOException, NoSocketException {
-            String fromServer;
-            if ((fromServer = in.readLine()) != null) {
-                screen.display(fromServer);
-            }
+        String fromServer;
+        while ((fromServer = in.readLine()) != null) {
+            screen.display(fromServer);
+        }
+        screen.display(null);
     }
 
     /*private void writeToServer() {

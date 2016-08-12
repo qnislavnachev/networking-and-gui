@@ -36,6 +36,7 @@ public class ClientTest {
         private Socket connection = null;
         private ServerSocket server;
         private boolean isUp = true;
+        private PrintStream out = null;
 
         public void start(int port) throws IOException {
             server = new ServerSocket(port);
@@ -64,13 +65,12 @@ public class ClientTest {
         }
 
         private void sendMessages() throws IOException {
-            PrintStream out = new PrintStream(clients.get((clients.size() - 1)).getOutputStream());
+            out = new PrintStream(clients.get((clients.size() - 1)).getOutputStream());
             out.println("Hello, you're client number №" + (clients.size()));
             for (int i = 0; i < (clients.size() - 1); i++) {
                 out = new PrintStream(clients.get(i).getOutputStream());
                 out.println("There's a new client in the list with №" + (clients.size()));
             }
-            out.close();
         }
     }
 
@@ -110,13 +110,13 @@ public class ClientTest {
         final States state = context.states("Connecting...");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client number №1");
-            then(state.is("First client connected!"));
             oneOf(screen).display(null);
             will(throwException(new NoSocketException()));
+            then(state.is("Error, server will stop now"));
         }});
         badServer.start(6005);
         client.connect("127.0.0.1", 6005);
-        synchroniser.waitUntil(state.is("First client connected!"));
         badServer.stop();
+        synchroniser.waitUntil(state.is("Error, server will stop now"));
     }
 }
