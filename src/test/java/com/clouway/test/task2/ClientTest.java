@@ -53,14 +53,14 @@ public class ClientTest {
 
     @Test
     public void happyPath() throws IOException, InterruptedException {
-        final States states = context.states("Waiting for connection!");
+        final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(screen).display("Date: 01.01.2016 Time: 09:24:54");
-            then(states.is("Connected!"));
+            then(state.is("Connected!"));
         }});
         server.start(6001);
         client.connect("127.0.0.1", 6001);
-        synchroniser.waitUntil(states.is("Connected!"));
+        synchroniser.waitUntil(state.is("Connected!"));
         assertTrue(client.getMessage().equals("Date: 01.01.2016 Time: 09:24:54"));
     }
 }

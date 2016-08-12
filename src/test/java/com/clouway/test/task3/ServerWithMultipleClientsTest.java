@@ -47,48 +47,48 @@ public class ServerWithMultipleClientsTest {
     }
 
     @Test
-    public void happyPathWithOneClient() throws IOException, InterruptedException, NoSocketException {
-        final States connecting = context.states("Waiting for connection!");
+    public void happyPath() throws IOException, InterruptedException, NoSocketException {
+        final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client №1 in the list!");
-            then(connecting.is("Successful connection!"));
+            then(state.is("Successful connection!"));
         }});
         server.start(6003);
         clientOne.connect("127.0.0.1", 6003);
-        synchroniser.waitUntil(connecting.is("Successful connection!"));
+        synchroniser.waitUntil(state.is("Successful connection!"));
     }
 
     @Test
-    public void happyPathWithSeveralClients() throws IOException, InterruptedException, NoSocketException {
-        final States connecting = context.states("Waiting for connection!");
+    public void multipleConnections() throws IOException, InterruptedException, NoSocketException {
+        final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client №1 in the list!");
             oneOf(screen).display("Hello, you're client №2 in the list!");
             oneOf(screen).display("Hello, you're client №3 in the list!");
-            then(connecting.is("Successful connection!"));
+            then(state.is("Successful connection!"));
         }});
         server.start(6002);
         clientOne.connect("127.0.0.1", 6002);
         clientTwo.connect("127.0.0.1", 6002);
         clientThree.connect("127.0.0.1", 6002);
-        synchroniser.waitUntil(connecting.is("Successful connection!"));
+        synchroniser.waitUntil(state.is("Successful connection!"));
     }
 
     @Test
     public void closingServer() throws InterruptedException, IOException, NoSocketException {
-        final States connecting = context.states("Waiting for connection!");
+        final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client №1 in the list!");
-            then(connecting.is("Successful connection!"));
+            then(state.is("Successful connection!"));
             oneOf(screen).display("Connection to clients is closed!");
             oneOf(screen).display("Stream to clients is closed!");
             oneOf(screen).display("Server is closed!");
-            then(connecting.is("Server is offline!"));
+            then(state.is("Server is offline!"));
         }});
         server.start(6004);
         clientOne.connect("127.0.0.1", 6004);
-        synchroniser.waitUntil(connecting.is("Successful connection!"));
+        synchroniser.waitUntil(state.is("Successful connection!"));
         server.stop();
-        synchroniser.waitUntil(connecting.is("Server is offline!"));
+        synchroniser.waitUntil(state.is("Server is offline!"));
     }
 }

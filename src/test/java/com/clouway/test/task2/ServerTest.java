@@ -74,17 +74,17 @@ public class ServerTest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.M.yyyy hh:mm:ss");
         final Date date = dateFormat.parse("01.01.2016 09:24:54");
 
-        final States connecting = context.states("Waiting for connection!");
+        final States state = context.states("Waiting for connection!");
         context.checking(new Expectations() {{
             oneOf(clock).getTimeAndDate();
             will(returnValue(date));
             oneOf(screen).display("Time and date send!");
             oneOf(screen).display("Time and date received!");
-            then(connecting.is("Information received!"));
+            then(state.is("Information received!"));
         }});
         server.start(6000);
         client.connect("127.0.0.1", 6000);
-        synchroniser.waitUntil(connecting.is("Information received!"));
+        synchroniser.waitUntil(state.is("Information received!"));
         assertTrue(client.getMessage().equals("Fri Jan 01 09:24:54 EET 2016"));
     }
 }

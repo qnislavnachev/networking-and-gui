@@ -75,7 +75,7 @@ public class ClientTest {
     }
 
     @Test
-    public void happyPathWithOneClient() throws IOException, NoSocketException, InterruptedException {
+    public void happyPath() throws IOException, NoSocketException, InterruptedException {
         final States state = context.states("Connecting...");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client number №1");
@@ -87,7 +87,7 @@ public class ClientTest {
     }
 
     @Test
-    public void happyPathWithMoreThanOneClient() throws IOException, NoSocketException, InterruptedException {
+    public void multipleConnections() throws IOException, NoSocketException, InterruptedException {
         final States state = context.states("Connecting...");
         context.checking(new Expectations() {{
             oneOf(screen).display("Hello, you're client number №1");
