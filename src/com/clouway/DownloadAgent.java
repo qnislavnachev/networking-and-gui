@@ -20,26 +20,27 @@ public class DownloadAgent {
   }
 
   public File downloadFile(String url, String destinationFile) throws IOException {
+
     URL urlForFile = new URL(url);
     URLConnection urlConnection = new URL(url).openConnection();
     Integer fileSize = urlConnection.getContentLength();
+    System.out.println(fileSize);
     InputStream inputStream = new BufferedInputStream(urlForFile.openStream());
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-    Integer bufferSize = fileSize / 10;
-    byte[] buffer = new byte[bufferSize];
+
+    byte[] buffer = new byte[fileSize];
     Integer n = 0;
-    Integer progress = 10;
+    Integer progress=0;
     while (-1 != (n = inputStream.read(buffer))) {
       outputStream.write(buffer, 0, n);
       progressBar.downloadProgress(progress);
-      progress += 10;
 
     }
     outputStream.close();
     inputStream.close();
-    byte[] response = outputStream.toByteArray();
-    return writeFileTo(destinationFile, response);
+    byte[] result = outputStream.toByteArray();
+    return writeFileTo(destinationFile, result);
   }
 
   private File writeFileTo(String name, byte[] bytes) throws IOException {
