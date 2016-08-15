@@ -13,7 +13,7 @@ import java.net.Socket;
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
-public class ClientTest {
+public class UserTest {
 
   class FakeServer implements Runnable {
     private Integer port;

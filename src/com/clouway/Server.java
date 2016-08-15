@@ -21,8 +21,9 @@ public class Server implements Runnable {
 
   @Override
   public void run() {
+    ServerSocket serverSocket=null;
     try {
-      ServerSocket serverSocket = new ServerSocket(port);
+      serverSocket = new ServerSocket(port);
       while (true) {
         Socket clientSocket = serverSocket.accept();
         PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -30,6 +31,13 @@ public class Server implements Runnable {
       }
     } catch (IOException e) {
       e.printStackTrace();
+    }
+    finally {
+      try {
+        serverSocket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 }
