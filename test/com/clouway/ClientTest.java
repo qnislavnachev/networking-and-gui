@@ -24,27 +24,37 @@ public class ClientTest {
 
     @Override
     public void run() {
+      ServerSocket serverSocket = null;
+      PrintWriter output = null;
       try {
-        ServerSocket serverSocket = new ServerSocket(port);
+        serverSocket = new ServerSocket(port);
         while (true) {
           Socket clientSocket = serverSocket.accept();
-          PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+          output = new PrintWriter(clientSocket.getOutputStream(), true);
           output.println("Hello the time is 27.09.1991 09:03");
         }
       } catch (IOException e) {
         e.printStackTrace();
+      } finally {
+        try {
+          serverSocket.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        output.close();
       }
 
     }
   }
+
   JUnitRuleMockery context = new JUnitRuleMockery() {{
     setThreadingPolicy(new Synchroniser());
   }};
 
-  Display display = context.mock(Display.class);
+  private Display display = context.mock(Display.class);
 
-  User user = new User("", 8000, display);
-  FakeServer fakeServer = new FakeServer(8000);
+  private User user = new User("", 8000, display);
+  private FakeServer fakeServer = new FakeServer(8000);
 
   @Test
   public void happyPath() throws Exception {

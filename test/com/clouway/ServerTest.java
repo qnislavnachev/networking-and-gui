@@ -46,10 +46,9 @@ public class ServerTest {
     setThreadingPolicy(new Synchroniser());
   }};
 
-  Clock clock = context.mock(Clock.class);
-//todo
-  Server server = new Server(8080, "Hello the date is", clock);
-  FakeUser fakeUser=new FakeUser("",8080);
+  private Clock clock = context.mock(Clock.class);
+  private Server server = new Server(8080, "Hello the date is", clock);
+  private FakeUser fakeUser=new FakeUser("",8080);
 
   @Test
   public void happyPath() throws Exception {
