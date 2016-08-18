@@ -20,21 +20,21 @@ public class DownloadAgent {
   }
 
   public File downloadFile(String url, String destinationFile) throws IOException {
-
     URL urlForFile = new URL(url);
     URLConnection urlConnection = new URL(url).openConnection();
     Integer fileSize = urlConnection.getContentLength();
-    System.out.println(fileSize);
     InputStream inputStream = new BufferedInputStream(urlForFile.openStream());
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-
-    byte[] buffer = new byte[fileSize];
-    Integer n = 0;
-    Integer progress=0;
+    byte[] buffer = new byte[512];
+    Integer n;
+    Integer progress = 0;
     while (-1 != (n = inputStream.read(buffer))) {
       outputStream.write(buffer, 0, n);
-      progressBar.downloadProgress(progress);
+      progress += n;
+      Integer percentage = (progress * 100) / fileSize;
+      if (percentage % 10 == 0) {
+        progressBar.downloadProgress(percentage);
+      }
 
     }
     outputStream.close();

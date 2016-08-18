@@ -20,6 +20,7 @@ public class DownloadAgentTest {
   public void downloadingFile() throws Exception {
     DownloadAgent downloadAgent = new DownloadAgent(progressBar);
     context.checking(new Expectations() {{
+      allowing(progressBar).downloadProgress(0);
       allowing(progressBar).downloadProgress(10);
       allowing(progressBar).downloadProgress(20);
       allowing(progressBar).downloadProgress(30);
@@ -29,9 +30,10 @@ public class DownloadAgentTest {
       allowing(progressBar).downloadProgress(70);
       allowing(progressBar).downloadProgress(80);
       allowing(progressBar).downloadProgress(90);
-      allowing(progressBar).downloadProgress(10);
+      allowing(progressBar).downloadProgress(100);
+
     }});
     File actual = new File("otherfile.jpg");
-    assertThat(downloadAgent.downloadFile("File:/home/clouway/Downloads/online-url-bibanews.jpg", "somefilefortest").getTotalSpace(), is(actual.getTotalSpace()));
+    assertThat(downloadAgent.downloadFile("File:/home/clouway/Downloads/online-url-bibanews.jpg", "somefilefortest.jpg").getTotalSpace(), is(actual.getTotalSpace()));
   }
 }
