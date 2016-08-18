@@ -11,24 +11,25 @@ import java.net.Socket;
  */
 public class Server implements Runnable {
   private Integer port;
-  private ConnectedUsers connectedUsers;
+  private ConnectedClients connectedClients;
   private ServerSocket serverSocket;
+  private boolean serverIsRunning=true;
 
-  public Server(Integer port, ConnectedUsers connectedUsers) {
+  public Server(Integer port, ConnectedClients connectedClients) {
     this.port = port;
-    this.connectedUsers = connectedUsers;
+    this.connectedClients = connectedClients;
   }
 
   @Override
   public void run() {
     try {
       serverSocket = new ServerSocket(port);
-      while (true) {//todo can use flag(bolean)
+      while (serverIsRunning) {
         Socket clientSocket = serverSocket.accept();
         PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-        Integer userCount = connectedUsers.getUserCount() +1 ;
+        Integer userCount = connectedClients.getUserCount() +1 ;
         output.println("Welcome, you are user number " + userCount);
-        connectedUsers.add(clientSocket);
+        connectedClients.add(clientSocket);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -42,10 +43,6 @@ public class Server implements Runnable {
   }
 
   public void shutdownServer() {
-    try {
-      serverSocket.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    serverIsRunning=false;
   }
 }

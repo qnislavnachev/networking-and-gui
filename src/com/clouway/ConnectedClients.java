@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
-public class ConnectedUsers {
+public class ConnectedClients {
   private ArrayList<Socket> clients = new ArrayList<>();
 
   public synchronized void add(Socket socket) {

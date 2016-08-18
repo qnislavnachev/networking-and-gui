@@ -5,14 +5,14 @@ package com.clouway;
  */
 public class Demo {
   public static void main(String[] args) {
-    ConnectedUsers connectedUsers = new ConnectedUsers();
+    ConnectedClients connectedClients = new ConnectedClients();
 
     Display display = message -> {
       System.out.println(message);
-      return null;
+      return message;
     };
 
-    Server server = new Server(8080, connectedUsers);
+    Server server = new Server(8080, connectedClients);
     Thread thread = new Thread(server);
 
     Client client = new Client("", 8080, display);
