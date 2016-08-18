@@ -13,7 +13,7 @@ import java.net.Socket;
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
-public class UserTest {
+public class ClientTest {
 
   class FakeServer implements Runnable {
     private Integer port;
@@ -53,7 +53,7 @@ public class UserTest {
 
   private Display display = context.mock(Display.class);
 
-  private User user = new User("", 8000, display);
+  private Client client = new Client("", 8000, display);
   private FakeServer fakeServer = new FakeServer(8000);
 
   @Test
@@ -65,6 +65,6 @@ public class UserTest {
     }});
 
     serverThread.start();
-    user.connectToServer();
+    client.connectToServer();
   }
 }

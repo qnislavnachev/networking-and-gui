@@ -8,17 +8,26 @@ import java.net.Socket;
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
-public class User {
+public class Client {
   private String host;
   private Integer port;
   private Display display;
 
-  public User(String host, Integer port, Display display) {
+  /**
+   * Constructor
+   * @param host name for the server
+   * @param port to connect to
+   * @param display the server responce
+   */
+  public Client(String host, Integer port, Display display) {
     this.host = host;
     this.port = port;
     this.display = display;
   }
 
+  /**
+   * Connecting to the server via host name and port.
+   */
   public void connectToServer() {
     try {
       Socket socket=new Socket(host,port);

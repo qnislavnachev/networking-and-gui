@@ -13,12 +13,21 @@ public class Server implements Runnable {
   private String message;
   private Clock clock;
 
+  /**
+   * Constructor
+   * @param port for the server
+   * @param message that will be displayed
+   * @param clock for the date and time
+   */
   public Server(Integer port, String message, Clock clock) {
     this.port = port;
     this.message = message;
     this.clock = clock;
   }
 
+  /**
+   * The server starts and listens for a client to connect.
+   */
   @Override
   public void run() {
     ServerSocket serverSocket=null;
