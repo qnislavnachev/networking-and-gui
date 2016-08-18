@@ -70,6 +70,7 @@ public class ServerTest {
     serverThread.start();
     clientThread.start();
     synchroniser.waitUntil(states.is("connected"));
+    server.shutdownServer();
   }
 
   @Test
@@ -85,5 +86,6 @@ public class ServerTest {
     clientThread.start();
     clientThread1.start();
     synchroniser.waitUntil(states.is("connected"));
+    server.shutdownServer();
   }
 }

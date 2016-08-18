@@ -15,11 +15,20 @@ public class Server implements Runnable {
   private ServerSocket serverSocket;
   private boolean serverIsRunning=true;
 
+  /**
+   * Constructor
+   * @param port that the server will listen on
+   * @param connectedClients on the server
+   */
   public Server(Integer port, ConnectedClients connectedClients) {
     this.port = port;
     this.connectedClients = connectedClients;
   }
 
+  /**
+   * The server starts and listens for clients. As soon as one connects he is notified for his number, and all the other
+   * clients are also notified that a client has connected.
+   */
   @Override
   public void run() {
     try {
@@ -42,6 +51,9 @@ public class Server implements Runnable {
     }
   }
 
+  /**
+   * For server shutdown
+   */
   public void shutdownServer() {
     serverIsRunning=false;
   }

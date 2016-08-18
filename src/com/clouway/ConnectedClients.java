@@ -11,6 +11,10 @@ import java.util.ArrayList;
 public class ConnectedClients {
   private ArrayList<Socket> clients = new ArrayList<>();
 
+  /**
+   * Adding sockets for the connected Clients
+   * @param socket of the Client
+   */
   public synchronized void add(Socket socket) {
     clients.add(socket);
     for (Socket clientSocket : clients) {
@@ -23,6 +27,9 @@ public class ConnectedClients {
     }
   }
 
+  /**
+   * @return the current user count.
+   */
   public Integer getUserCount() {
     return clients.size();
   }
