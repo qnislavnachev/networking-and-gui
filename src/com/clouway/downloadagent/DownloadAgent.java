@@ -1,4 +1,4 @@
-package com.clouway;
+package com.clouway.downloadagent;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,10 +15,7 @@ import java.net.URLConnection;
 public class DownloadAgent {
   private ProgressBar progressBar;
 
-  /**
-   * Constructor
-   * @param progressBar visual feedback for progress.
-   */
+
   public DownloadAgent(ProgressBar progressBar) {
     this.progressBar = progressBar;
   }
@@ -44,27 +41,16 @@ public class DownloadAgent {
       progress += n;
       Integer percentage = (progress * 100) / fileSize;
       if (percentage % 10 == 0) {
-        progressBar.downloadProgress(percentage);
+        progressBar.update(percentage);
       }
 
     }
     outputStream.close();
     inputStream.close();
     byte[] result = outputStream.toByteArray();
-    return writeFileTo(destinationFile, result);
-  }
-
-  /**
-   * Write the downloaded file to the destination we desire.
-   * @param name name of the file
-   * @param bytes the byte buffer where the file is.
-   * @return the downloaded file.
-   * @throws IOException
-   */
-  private File writeFileTo(String name, byte[] bytes) throws IOException {
-    File file = new File(name);
+    File file = new File(destinationFile);
     FileOutputStream fileOutputStream = new FileOutputStream(file);
-    fileOutputStream.write(bytes);
+    fileOutputStream.write(result);
     fileOutputStream.close();
     return file;
   }

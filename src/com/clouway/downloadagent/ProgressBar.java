@@ -1,8 +1,8 @@
-package com.clouway;
+package com.clouway.downloadagent;
 
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
 public interface ProgressBar {
-  Integer downloadProgress(Integer progress);
+  Integer update(Integer progress);
 }
