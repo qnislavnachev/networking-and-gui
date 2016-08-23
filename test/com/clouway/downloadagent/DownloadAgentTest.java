@@ -2,6 +2,7 @@ package com.clouway.downloadagent;
 
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
@@ -13,12 +14,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
 public class DownloadAgentTest {
-  JUnitRuleMockery context = new JUnitRuleMockery();
-  ProgressBar progressBar = context.mock(ProgressBar.class);
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
+
+  private ProgressBar progressBar = context.mock(ProgressBar.class);
 
   @Test
   public void happyPath() throws Exception {
-    DownloadAgent downloadAgent = new DownloadAgent(progressBar);
+    DownloadAgent downloadAgent = new DownloadAgent(progressBar, 5);
     context.checking(new Expectations() {{
       allowing(progressBar).update(0);
       allowing(progressBar).update(10);
@@ -32,7 +35,13 @@ public class DownloadAgentTest {
       allowing(progressBar).update(90);
       allowing(progressBar).update(100);
 
+//      oneOf(progressBar).update(25);
+//      oneOf(progressBar).update(50);
+//      oneOf(progressBar).update(75);
+//      oneOf(progressBar).update(100);
+
     }});
+
     File actual = new File("file.jpg");
     downloadAgent.downloadFile("File:test/com/clouway/downloadagent/file.jpg", "test/com/clouway/downloadagent/otherfile.jpg");
     File expected = new File("otherfile.jpg");

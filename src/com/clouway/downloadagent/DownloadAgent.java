@@ -1,7 +1,6 @@
 package com.clouway.downloadagent;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,34 +13,36 @@ import java.net.URLConnection;
  */
 public class DownloadAgent {
   private ProgressBar progressBar;
+  private Integer stepSize;
 
-
-  public DownloadAgent(ProgressBar progressBar) {
+  public DownloadAgent(ProgressBar progressBar, Integer stepSize) {
     this.progressBar = progressBar;
+    this.stepSize = stepSize;
   }
 
+  public File downloadFile(String path, String dist) throws IOException {
+    URL url = new URL(path);
+    URLConnection urlConnection = new URL(path).openConnection();
 
-  public File downloadFile(String urlAsString, String destinationFile) throws IOException {
-    URL url = new URL(urlAsString);
-    URLConnection urlConnection = new URL(urlAsString).openConnection();
     Integer fileSize = urlConnection.getContentLength();
-    InputStream inputStream = new BufferedInputStream(url.openStream());
-    File file = new File(destinationFile);
-    FileOutputStream outputStream=new FileOutputStream(file);
-    byte[] buffer = new byte[512];
+    InputStream input = new BufferedInputStream(url.openStream());
+
+    File file = new File(dist);
+    FileOutputStream output=new FileOutputStream(file);
+
+    byte[] buffer = new byte[stepSize];
     Integer n;
     Integer progress = 0;
-    while (-1 != (n = inputStream.read(buffer))) {
-      outputStream.write(buffer, 0, n);
+    while ((n = input.read(buffer)) != -1) {
+      output.write(buffer, 0, n);
       progress += n;
       Integer percentage = (progress * 100) / fileSize;
       if (percentage % 10 == 0) {
         progressBar.update(percentage);
       }
-
     }
-    outputStream.close();
-    inputStream.close();
+    output.close();
+    input.close();
     return file;
   }
 }
