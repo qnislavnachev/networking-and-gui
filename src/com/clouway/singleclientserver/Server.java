@@ -20,9 +20,6 @@ public class Server implements Runnable {
     this.clock = clock;
   }
 
-  /**
-   * The server starts and listens for a client to connect.
-   */
   @Override
   public void run() {
 

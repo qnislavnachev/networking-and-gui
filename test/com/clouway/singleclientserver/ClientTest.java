@@ -3,6 +3,7 @@ package com.clouway.singleclientserver;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -39,7 +40,8 @@ public class ClientTest {
     }
   }
 
-  JUnitRuleMockery context = new JUnitRuleMockery() {{
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery() {{
     setThreadingPolicy(new Synchroniser());
   }};
 

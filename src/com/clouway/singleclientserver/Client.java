@@ -19,10 +19,7 @@ public class Client {
     this.port = port;
     this.display = display;
   }
-
-  /**
-   * Connecting to the server via host name and port.
-   */
+  
   public void connect() {
     try {
       Socket socket = new Socket(host, port);
