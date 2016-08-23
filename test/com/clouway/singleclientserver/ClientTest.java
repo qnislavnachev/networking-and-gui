@@ -44,18 +44,15 @@ public class ClientTest {
   }};
 
   private Display display = context.mock(Display.class);
-
   private Client client = new Client("", 8000, display);
   private FakeServer fakeServer = new FakeServer(8000, "Hello the time is 27.09.1991 09:03");
 
   @Test
   public void happyPath() throws Exception {
     Thread serverThread = new Thread(fakeServer);
-
     context.checking(new Expectations() {{
       oneOf(display).show("Hello the time is 27.09.1991 09:03");
     }});
-
     serverThread.start();
     client.connect();
   }
