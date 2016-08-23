@@ -1,4 +1,4 @@
-package com.clouway;
+package com.clouway.singleclientserver;
 
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>

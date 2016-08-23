@@ -1,4 +1,6 @@
-package com.clouway;
+package com.clouway.singleclientserver;
+
+import com.clouway.singleclientserver.Clock;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,12 +15,7 @@ public class Server implements Runnable {
   private String message;
   private Clock clock;
 
-  /**
-   * Constructor
-   * @param port for the server
-   * @param message that will be displayed
-   * @param clock for the date and time
-   */
+
   public Server(Integer port, String message, Clock clock) {
     this.port = port;
     this.message = message;
@@ -30,20 +27,24 @@ public class Server implements Runnable {
    */
   @Override
   public void run() {
-    ServerSocket serverSocket=null;
+    ServerSocket serverSocket = null;
+    PrintWriter output = null;
     try {
       serverSocket = new ServerSocket(port);
       while (true) {
         Socket clientSocket = serverSocket.accept();
-        PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+        output = new PrintWriter(clientSocket.getOutputStream(), true);
         output.println(message + " " + clock.dateTime());
       }
     } catch (IOException e) {
       e.printStackTrace();
-    }
-    finally {
+    } finally {
       try {
-        serverSocket.close();
+        if (serverSocket != null && output != null) {
+          serverSocket.close();
+          output.close();
+        }
+
       } catch (IOException e) {
         e.printStackTrace();
       }

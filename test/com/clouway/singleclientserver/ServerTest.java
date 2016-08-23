@@ -1,6 +1,8 @@
-package com.clouway;
+package com.clouway.singleclientserver;
 
 
+import com.clouway.singleclientserver.Clock;
+import com.clouway.singleclientserver.Server;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -42,25 +44,25 @@ public class ServerTest {
   }
 
   @Rule
-  public JUnitRuleMockery context = new JUnitRuleMockery(){{
+  public JUnitRuleMockery context = new JUnitRuleMockery() {{
     setThreadingPolicy(new Synchroniser());
   }};
 
   private Clock clock = context.mock(Clock.class);
   private Server server = new Server(8080, "Hello the date is", clock);
-  private FakeUser fakeUser=new FakeUser("",8080);
+  private FakeUser fakeUser = new FakeUser("", 8080);
 
   @Test
   public void happyPath() throws Exception {
-    Thread serverThread=new Thread(server);
+    Thread serverThread = new Thread(server);
     serverThread.start();
-    context.checking(new Expectations(){{
+    context.checking(new Expectations() {{
       oneOf(clock).dateTime();
       will(returnValue("27.09.1991 09:03"));
     }});
-    String expected="Hello the date is 27.09.1991 09:03";
-    String actual=fakeUser.connect();
+    String expected = "Hello the date is 27.09.1991 09:03";
+    String actual = fakeUser.connect();
 
-    assertThat(actual,is(expected));
+    assertThat(actual, is(expected));
   }
 }

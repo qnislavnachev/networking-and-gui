@@ -1,4 +1,4 @@
-package com.clouway;
+package com.clouway.singleclientserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,12 +13,7 @@ public class Client {
   private Integer port;
   private Display display;
 
-  /**
-   * Constructor
-   * @param host name for the server
-   * @param port to connect to
-   * @param display the server responce
-   */
+
   public Client(String host, Integer port, Display display) {
     this.host = host;
     this.port = port;
@@ -28,11 +23,11 @@ public class Client {
   /**
    * Connecting to the server via host name and port.
    */
-  public void connectToServer() {
+  public void connect() {
     try {
-      Socket socket=new Socket(host,port);
+      Socket socket = new Socket(host, port);
 
-      BufferedReader serverInput=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      BufferedReader serverInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       display.show(serverInput.readLine());
 
       serverInput.close();
