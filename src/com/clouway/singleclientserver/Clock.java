@@ -7,5 +7,5 @@ public interface Clock {
   /**
    * @return date and time.
    */
-  String dateTime();
+  String getTime();
 }

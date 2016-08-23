@@ -1,7 +1,5 @@
 package com.clouway.singleclientserver;
 
-import com.clouway.singleclientserver.Clock;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -33,7 +31,7 @@ public class Server implements Runnable {
       while (true) {
         Socket clientSocket = serverSocket.accept();
         PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-        output.println(message + " " + clock.dateTime());
+        output.println(message + " " + clock.getTime());
         output.close();
       }
     } catch (IOException e) {

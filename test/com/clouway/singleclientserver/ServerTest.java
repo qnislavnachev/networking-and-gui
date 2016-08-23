@@ -1,8 +1,6 @@
 package com.clouway.singleclientserver;
 
 
-import com.clouway.singleclientserver.Clock;
-import com.clouway.singleclientserver.Server;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -57,7 +55,7 @@ public class ServerTest {
     Thread serverThread = new Thread(server);
     serverThread.start();
     context.checking(new Expectations() {{
-      oneOf(clock).dateTime();
+      oneOf(clock).getTime();
       will(returnValue("27.09.1991 09:03"));
     }});
     String expected = "Hello the date is 27.09.1991 09:03";

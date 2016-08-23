@@ -8,5 +8,5 @@ public interface Display {
    * @param message that will be displayed
    * @return the message
    */
-  String show(String message);
+  void show(String message);
 }
