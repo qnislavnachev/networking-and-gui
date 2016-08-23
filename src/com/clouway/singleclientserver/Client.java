@@ -26,11 +26,9 @@ public class Client {
   public void connect() {
     try {
       Socket socket = new Socket(host, port);
-
-      BufferedReader serverInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      display.show(serverInput.readLine());
-
-      serverInput.close();
+      BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      display.show(input.readLine());
+      input.close();
       socket.close();
     } catch (IOException e) {
       e.printStackTrace();

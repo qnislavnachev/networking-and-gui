@@ -27,27 +27,18 @@ public class Server implements Runnable {
    */
   @Override
   public void run() {
-    ServerSocket serverSocket = null;
-    PrintWriter output = null;
-    try {
-      serverSocket = new ServerSocket(port);
+
+    try (ServerSocket serverSocket = new ServerSocket(port)) {
+
       while (true) {
         Socket clientSocket = serverSocket.accept();
-        output = new PrintWriter(clientSocket.getOutputStream(), true);
+        PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
         output.println(message + " " + clock.dateTime());
+        output.close();
       }
     } catch (IOException e) {
       e.printStackTrace();
-    } finally {
-      try {
-        if (serverSocket != null && output != null) {
-          serverSocket.close();
-          output.close();
-        }
-
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
     }
   }
 }
+

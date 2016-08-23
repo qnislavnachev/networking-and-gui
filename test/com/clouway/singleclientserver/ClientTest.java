@@ -1,7 +1,5 @@
 package com.clouway.singleclientserver;
 
-import com.clouway.singleclientserver.Client;
-import com.clouway.singleclientserver.Display;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -28,26 +26,16 @@ public class ClientTest {
 
     @Override
     public void run() {
-      ServerSocket serverSocket = null;
-      PrintWriter output = null;
-      try {
-        serverSocket = new ServerSocket(port);
+      try (ServerSocket serverSocket = new ServerSocket(port)) {
         while (true) {
           Socket clientSocket = serverSocket.accept();
-          output = new PrintWriter(clientSocket.getOutputStream(), true);
+          PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
           output.println(message);
+          output.close();
         }
       } catch (IOException e) {
         e.printStackTrace();
-      } finally {
-        try {
-          serverSocket.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-        output.close();
       }
-
     }
   }
 
