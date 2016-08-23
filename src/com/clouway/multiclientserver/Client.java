@@ -1,4 +1,4 @@
-package com.clouway;
+package com.clouway.multiclientserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,12 +13,7 @@ public class Client implements Runnable {
   private Integer port;
   private Display display;
 
-  /**
-   * Constructor
-   * @param host name to connect to
-   * @param port of the server
-   * @param display message from server
-   */
+
   public Client(String host, Integer port, Display display) {
     this.host = host;
     this.port = port;
@@ -26,7 +21,7 @@ public class Client implements Runnable {
   }
 
   /**
-   * Connects to the server and waits for responce from it.
+   * Connects to the server and waits for response from it.
    */
   @Override
   public void run() {

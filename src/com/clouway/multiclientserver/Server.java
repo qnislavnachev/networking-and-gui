@@ -1,4 +1,4 @@
-package com.clouway;
+package com.clouway.multiclientserver;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,13 +13,9 @@ public class Server implements Runnable {
   private Integer port;
   private ConnectedClients connectedClients;
   private ServerSocket serverSocket;
-  private boolean serverIsRunning=true;
+  private boolean serverIsRunning = true;
 
-  /**
-   * Constructor
-   * @param port that the server will listen on
-   * @param connectedClients on the server
-   */
+
   public Server(Integer port, ConnectedClients connectedClients) {
     this.port = port;
     this.connectedClients = connectedClients;
@@ -36,7 +32,7 @@ public class Server implements Runnable {
       while (serverIsRunning) {
         Socket clientSocket = serverSocket.accept();
         PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-        Integer userCount = connectedClients.getUserCount() +1 ;
+        Integer userCount = connectedClients.getUserCount() + 1;
         output.println("Welcome, you are user number " + userCount);
         connectedClients.add(clientSocket);
       }
@@ -55,6 +51,6 @@ public class Server implements Runnable {
    * For server shutdown
    */
   public void shutdownServer() {
-    serverIsRunning=false;
+    serverIsRunning = false;
   }
 }

@@ -1,5 +1,7 @@
-package com.clouway;
+package com.clouway.multiclientserver;
 
+import com.clouway.multiclientserver.Client;
+import com.clouway.multiclientserver.Display;
 import org.jmock.Expectations;
 import org.jmock.States;
 import org.jmock.integration.junit4.JUnitRuleMockery;

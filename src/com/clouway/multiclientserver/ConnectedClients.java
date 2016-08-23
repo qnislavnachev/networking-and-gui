@@ -1,4 +1,4 @@
-package com.clouway;
+package com.clouway.multiclientserver;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,12 +13,13 @@ public class ConnectedClients {
 
   /**
    * Adding sockets for the connected Clients
+   *
    * @param socket of the Client
    */
   public synchronized void add(Socket socket) {
     clients.add(socket);
     for (Socket clientSocket : clients) {
-      try  {
+      try {
         PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
         output.println("A client connected to the server.");
       } catch (IOException e) {

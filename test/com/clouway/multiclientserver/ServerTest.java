@@ -1,9 +1,13 @@
-package com.clouway;
+package com.clouway.multiclientserver;
 
+import com.clouway.multiclientserver.ConnectedClients;
+import com.clouway.multiclientserver.Display;
+import com.clouway.multiclientserver.Server;
 import org.jmock.Expectations;
 import org.jmock.States;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -61,20 +65,19 @@ public class ServerTest {
   private Thread clientThread1 = new Thread(fakeClient1);
 
   @Test
-  public void oneClientConnects() throws Exception {
+  public void happyPath() throws Exception {
     final States states = context.states("connecting..");
     context.checking(new Expectations() {{
-      allowing(display).show("Welcome, you are user number 1");
+      oneOf(display).show("Welcome, you are user number 1");
       then(states.is("connected"));
     }});
     serverThread.start();
     clientThread.start();
     synchroniser.waitUntil(states.is("connected"));
-    server.shutdownServer();
   }
 
   @Test
-  public void moreThanOneClientsConnectToTheServer() throws Exception {
+  public void multipleConnections() throws Exception {
     final States states = context.states("connecting..");
     context.checking(new Expectations() {{
       allowing(display).show("Welcome, you are user number 1");
@@ -86,6 +89,10 @@ public class ServerTest {
     clientThread.start();
     clientThread1.start();
     synchroniser.waitUntil(states.is("connected"));
+  }
+
+  @After
+  public void tearDown() throws Exception {
     server.shutdownServer();
   }
 }
