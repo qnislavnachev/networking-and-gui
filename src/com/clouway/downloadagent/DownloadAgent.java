@@ -20,19 +20,14 @@ public class DownloadAgent {
     this.progressBar = progressBar;
   }
 
-  /**
-   * Downloads a file.
-   * @param url for the file
-   * @param destinationFile the place to save the file
-   * @return the donwloaded file
-   * @throws IOException
-   */
-  public File downloadFile(String url, String destinationFile) throws IOException {
-    URL urlForFile = new URL(url);
-    URLConnection urlConnection = new URL(url).openConnection();
+
+  public File downloadFile(String urlAsString, String destinationFile) throws IOException {
+    URL url = new URL(urlAsString);
+    URLConnection urlConnection = new URL(urlAsString).openConnection();
     Integer fileSize = urlConnection.getContentLength();
-    InputStream inputStream = new BufferedInputStream(urlForFile.openStream());
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    InputStream inputStream = new BufferedInputStream(url.openStream());
+    File file = new File(destinationFile);
+    FileOutputStream outputStream=new FileOutputStream(file);
     byte[] buffer = new byte[512];
     Integer n;
     Integer progress = 0;
@@ -47,11 +42,6 @@ public class DownloadAgent {
     }
     outputStream.close();
     inputStream.close();
-    byte[] result = outputStream.toByteArray();
-    File file = new File(destinationFile);
-    FileOutputStream fileOutputStream = new FileOutputStream(file);
-    fileOutputStream.write(result);
-    fileOutputStream.close();
     return file;
   }
 }

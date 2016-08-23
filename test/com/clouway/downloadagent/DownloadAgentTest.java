@@ -17,7 +17,7 @@ public class DownloadAgentTest {
   ProgressBar progressBar = context.mock(ProgressBar.class);
 
   @Test
-  public void happyPath () throws Exception {
+  public void happyPath() throws Exception {
     DownloadAgent downloadAgent = new DownloadAgent(progressBar);
     context.checking(new Expectations() {{
       allowing(progressBar).update(0);
@@ -33,8 +33,9 @@ public class DownloadAgentTest {
       allowing(progressBar).update(100);
 
     }});
-    File actual=downloadAgent.downloadFile("File:/home/clouway/Downloads/online-url-bibanews.jpg", "somefilefortest.jpg");
+    File actual = new File("file.jpg");
+    downloadAgent.downloadFile("File:test/com/clouway/downloadagent/file.jpg", "test/com/clouway/downloadagent/otherfile.jpg");
     File expected = new File("otherfile.jpg");
-    assertThat(actual.getTotalSpace(), is(expected.getTotalSpace()));
+    assertThat(expected.getTotalSpace(), is(actual.getTotalSpace()));
   }
 }
