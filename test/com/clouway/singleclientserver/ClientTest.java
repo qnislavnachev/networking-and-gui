@@ -16,7 +16,7 @@ import java.net.Socket;
  */
 public class ClientTest {
 
-  class FakeServer implements Runnable {
+  class FakeServer {
     private Integer port;
     private String message;
 
@@ -25,18 +25,19 @@ public class ClientTest {
       this.message = message;
     }
 
-    @Override
-    public void run() {
-      try (ServerSocket serverSocket = new ServerSocket(port)) {
-        while (true) {
-          Socket clientSocket = serverSocket.accept();
-          PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-          output.println(message);
-          output.close();
+    public void start() {
+      new Thread(() -> {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+          while (true) {
+            Socket clientSocket = serverSocket.accept();
+            PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+            output.println(message);
+            output.close();
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
         }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+      }).start();
     }
   }
 
@@ -51,11 +52,10 @@ public class ClientTest {
 
   @Test
   public void happyPath() throws Exception {
-    Thread serverThread = new Thread(fakeServer);
     context.checking(new Expectations() {{
       oneOf(display).show("Hello the time is 27.09.1991 09:03");
     }});
-    serverThread.start();
+    fakeServer.start();
     client.connect();
   }
 }

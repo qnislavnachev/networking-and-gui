@@ -52,15 +52,13 @@ public class ServerTest {
 
   @Test
   public void happyPath() throws Exception {
-    Thread serverThread = new Thread(server);
-    serverThread.start();
+    server.start();
     context.checking(new Expectations() {{
       oneOf(clock).getTime();
       will(returnValue("27.09.1991 09:03"));
     }});
     String expected = "Hello the date is 27.09.1991 09:03";
     String actual = fakeUser.connect();
-
     assertThat(actual, is(expected));
   }
 }

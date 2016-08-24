@@ -8,7 +8,7 @@ import java.net.Socket;
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
-public class Server implements Runnable {
+public class Server {
   private Integer port;
   private String message;
   private Clock clock;
@@ -20,20 +20,21 @@ public class Server implements Runnable {
     this.clock = clock;
   }
 
-  @Override
-  public void run() {
 
-    try (ServerSocket serverSocket = new ServerSocket(port)) {
+  public void start() {
 
-      while (true) {
-        Socket clientSocket = serverSocket.accept();
-        PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-        output.println(message + " " + clock.getTime());
-        output.close();
+    new Thread(() -> {
+      try (ServerSocket serverSocket = new ServerSocket(port)) {
+
+        while (true) {
+          Socket clientSocket = serverSocket.accept();
+          PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+          output.println(message + " " + clock.getTime());
+          output.close();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    }).start();
   }
 }
-
