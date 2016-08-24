@@ -13,17 +13,20 @@ public class ConnectedClients {
 
   public synchronized void add(Socket socket) {
     clients.add(socket);
+  }
+
+  public void notifyAllClients() {
     for (Socket clientSocket : clients) {
       try {
         PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-        output.println("Client " + getUserCount() + " connected to the server.");
+        output.println("Client " + count() + " connected to the server.");
       } catch (IOException e) {
         e.printStackTrace();
       }
     }
   }
 
-  public Integer getUserCount() {
+  public Integer count() {
     return clients.size();
   }
 }

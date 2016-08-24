@@ -52,16 +52,16 @@ public class ServerTest {
     setThreadingPolicy(synchroniser);
   }};
 
-  @After
-  public void tearDown() throws Exception {
-    server.stop();
-  }
-
   private Display display = context.mock(Display.class);
   private ConnectedClients connectedClients = new ConnectedClients();
   private Server server = new Server(8080, connectedClients);
   private FakeClient fakeClient = new FakeClient("", 8080, display);
   private FakeClient fakeClient1 = new FakeClient("", 8080, display);
+
+  @After
+  public void tearDown() throws Exception {
+    server.stop();
+  }
 
   @Test
   public void happyPath() throws Exception {
@@ -79,10 +79,10 @@ public class ServerTest {
   public void multipleConnections() throws Exception {
     final States states = context.states("connecting..");
     context.checking(new Expectations() {{
-      oneOf(display).show("Client 1 connected to the server.");
       oneOf(display).show("Welcome, you are user number 1");
-      oneOf(display).show("Client 2 connected to the server.");
+      oneOf(display).show("Client 1 connected to the server.");
       oneOf(display).show("Welcome, you are user number 2");
+      oneOf(display).show("Client 2 connected to the server.");
       then(states.is("connected"));
     }});
     server.start();

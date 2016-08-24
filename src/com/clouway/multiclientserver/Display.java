@@ -6,7 +6,6 @@ package com.clouway.multiclientserver;
 public interface Display {
   /**
    * @param message from the server
-   * @return message
-   */
-  String show(String message);
+   * */
+  void show(String message);
 }

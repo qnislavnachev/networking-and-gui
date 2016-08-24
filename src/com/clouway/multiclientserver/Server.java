@@ -28,9 +28,10 @@ public class Server {
         while (serverIsRunning) {
           Socket clientSocket = serverSocket.accept();
           PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-          Integer userCount = connectedClients.getUserCount() + 1;
+          Integer userCount = connectedClients.count() +1;
           output.println("Welcome, you are user number " + userCount);
           connectedClients.add(clientSocket);
+          connectedClients.notifyAllClients();
         }
       } catch (IOException e) {
         e.printStackTrace();
