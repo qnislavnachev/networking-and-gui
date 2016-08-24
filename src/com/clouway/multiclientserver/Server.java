@@ -9,7 +9,7 @@ import java.net.Socket;
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
-public class Server implements Runnable {
+public class Server {
   private Integer port;
   private ConnectedClients connectedClients;
   private ServerSocket serverSocket;
@@ -21,36 +21,30 @@ public class Server implements Runnable {
     this.connectedClients = connectedClients;
   }
 
-  /**
-   * The server starts and listens for clients. As soon as one connects he is notified for his number, and all the other
-   * clients are also notified that a client has connected.
-   */
-  @Override
-  public void run() {
-    try {
-      serverSocket = new ServerSocket(port);
-      while (serverIsRunning) {
-        Socket clientSocket = serverSocket.accept();
-        PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-        Integer userCount = connectedClients.getUserCount() + 1;
-        output.println("Welcome, you are user number " + userCount);
-        connectedClients.add(clientSocket);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
+  public void start() {
+    new Thread(() -> {
       try {
-        serverSocket.close();
+        serverSocket = new ServerSocket(port);
+        while (serverIsRunning) {
+          Socket clientSocket = serverSocket.accept();
+          PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+          Integer userCount = connectedClients.getUserCount() + 1;
+          output.println("Welcome, you are user number " + userCount);
+          connectedClients.add(clientSocket);
+        }
       } catch (IOException e) {
         e.printStackTrace();
+      } finally {
+        try {
+          serverSocket.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
-    }
+    }).start();
   }
 
-  /**
-   * For server shutdown
-   */
-  public void shutdownServer() {
+  public void stop() {
     serverIsRunning = false;
   }
 }

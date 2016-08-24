@@ -1,8 +1,5 @@
 package com.clouway.multiclientserver;
 
-import com.clouway.multiclientserver.ConnectedClients;
-import com.clouway.multiclientserver.Display;
-import com.clouway.multiclientserver.Server;
 import org.jmock.Expectations;
 import org.jmock.States;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -21,7 +18,7 @@ import java.net.UnknownHostException;
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
 public class ServerTest {
-  private class FakeClient implements Runnable {
+  private class FakeClient {
     private String host;
     private Integer port;
     private Display display;
@@ -32,19 +29,20 @@ public class ServerTest {
       this.display = display;
     }
 
-    @Override
-    public void run() {
-      try (Socket socket = new Socket(host, port);
-           BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))
-      ) {
-        while (true) {
-          display.show(input.readLine());
+    public void connect() {
+      new Thread(() -> {
+        try (Socket socket = new Socket(host, port);
+             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+        ) {
+          while (true) {
+            display.show(input.readLine());
+          }
+        } catch (UnknownHostException e) {
+          e.printStackTrace();
+        } catch (IOException e) {
+          e.printStackTrace();
         }
-      } catch (UnknownHostException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+      }).start();
     }
   }
 
@@ -54,15 +52,16 @@ public class ServerTest {
     setThreadingPolicy(synchroniser);
   }};
 
-  private Display display = context.mock(Display.class);
+  @After
+  public void tearDown() throws Exception {
+    server.stop();
+  }
 
+  private Display display = context.mock(Display.class);
   private ConnectedClients connectedClients = new ConnectedClients();
   private Server server = new Server(8080, connectedClients);
   private FakeClient fakeClient = new FakeClient("", 8080, display);
   private FakeClient fakeClient1 = new FakeClient("", 8080, display);
-  private Thread serverThread = new Thread(server);
-  private Thread clientThread = new Thread(fakeClient);
-  private Thread clientThread1 = new Thread(fakeClient1);
 
   @Test
   public void happyPath() throws Exception {
@@ -71,8 +70,8 @@ public class ServerTest {
       oneOf(display).show("Welcome, you are user number 1");
       then(states.is("connected"));
     }});
-    serverThread.start();
-    clientThread.start();
+    server.start();
+    fakeClient.connect();
     synchroniser.waitUntil(states.is("connected"));
   }
 
@@ -80,19 +79,15 @@ public class ServerTest {
   public void multipleConnections() throws Exception {
     final States states = context.states("connecting..");
     context.checking(new Expectations() {{
-      allowing(display).show("Welcome, you are user number 1");
-      allowing(display).show("Welcome, you are user number 2");
-      allowing(display).show("A client connected to the server.");
+      oneOf(display).show("Client 1 connected to the server.");
+      oneOf(display).show("Welcome, you are user number 1");
+      oneOf(display).show("Client 2 connected to the server.");
+      oneOf(display).show("Welcome, you are user number 2");
       then(states.is("connected"));
     }});
-    serverThread.start();
-    clientThread.start();
-    clientThread1.start();
+    server.start();
+    fakeClient.connect();
+    fakeClient1.connect();
     synchroniser.waitUntil(states.is("connected"));
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    server.shutdownServer();
   }
 }

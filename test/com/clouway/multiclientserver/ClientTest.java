@@ -1,7 +1,5 @@
 package com.clouway.multiclientserver;
 
-import com.clouway.multiclientserver.Client;
-import com.clouway.multiclientserver.Display;
 import org.jmock.Expectations;
 import org.jmock.States;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -19,7 +17,7 @@ import java.net.Socket;
  */
 public class ClientTest {
 
-  private class FakeServer implements Runnable {
+  private class FakeServer {
     private Integer port;
     private ServerSocket serverSocket;
     private boolean serverIsRunning = true;
@@ -29,27 +27,27 @@ public class ClientTest {
 
     }
 
-    @Override
-    public void run() {
-      try {
-        serverSocket = new ServerSocket(port);
-        while (serverIsRunning) {
-          Socket clientSocket = serverSocket.accept();
-          PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-          output.println("Welcome, you are user number 1");
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      } finally {
+    public void start() {
+      new Thread(() -> {
         try {
-          serverSocket.close();
+          serverSocket = new ServerSocket(port);
+          while (serverIsRunning) {
+            Socket clientSocket = serverSocket.accept();
+            PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+            output.println("Welcome, you are user number 1");
+          }
         } catch (IOException e) {
           e.printStackTrace();
+        } finally {
+          try {
+            serverSocket.close();
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
         }
-      }
+      }).start();
     }
   }
-
 
   public Synchroniser synchroniser = new Synchroniser();
   @Rule
@@ -60,8 +58,7 @@ public class ClientTest {
   private FakeServer fakeServer = new FakeServer(8081);
   private Display display = context.mock(Display.class);
   private Client client = new Client("", 8081, display);
-  private Thread fakeServerThread = new Thread(fakeServer);
-  private Thread clientThread = new Thread(client);
+
 
   @Test
   public void happyPath() throws Exception {
@@ -70,8 +67,9 @@ public class ClientTest {
       oneOf(display).show("Welcome, you are user number 1");
       then(states.is("connected"));
     }});
-    fakeServerThread.start();
-    clientThread.start();
+    fakeServer.start();
+    client.connect();
     synchroniser.waitUntil(states.is("connected"));
   }
 }
+

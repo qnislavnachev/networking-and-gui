@@ -8,7 +8,7 @@ import java.net.Socket;
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
-public class Client implements Runnable {
+public class Client {
   private String host;
   private Integer port;
   private Display display;
@@ -20,19 +20,19 @@ public class Client implements Runnable {
     this.display = display;
   }
 
-  /**
-   * Connects to the server and waits for response from it.
-   */
-  @Override
-  public void run() {
-    try (Socket socket = new Socket(host, port);
-         BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))
-    ) {
-      while (true) {
-        display.show(input.readLine());
+  public void connect() {
+    new Thread(() -> {
+      try (Socket socket = new Socket(host, port);
+           BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+      ) {
+        while (true) {
+          display.show(input.readLine());
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    }).start();
   }
+
+
 }
