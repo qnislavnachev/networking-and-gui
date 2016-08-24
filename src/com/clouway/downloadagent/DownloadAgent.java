@@ -28,7 +28,7 @@ public class DownloadAgent {
     InputStream input = new BufferedInputStream(url.openStream());
 
     File file = new File(dist);
-    FileOutputStream output=new FileOutputStream(file);
+    FileOutputStream output = new FileOutputStream(file);
 
     byte[] buffer = new byte[stepSize];
     Integer n;
@@ -37,9 +37,7 @@ public class DownloadAgent {
       output.write(buffer, 0, n);
       progress += n;
       Integer percentage = (progress * 100) / fileSize;
-      if (percentage % 10 == 0) {
-        progressBar.update(percentage);
-      }
+      progressBar.update(percentage);
     }
     output.close();
     input.close();
