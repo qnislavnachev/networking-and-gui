@@ -4,7 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import task1.DownloadAgent;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -14,12 +16,18 @@ public class DownloadAgentTest {
 
     @Test
     public void downloadedFileSize() throws Exception {
+        //Set up
         DownloadAgent agent = new DownloadAgent();
-        URL url = new URL("https://i.ytimg.com/vi/9Nwn-TZfFUI/maxresdefault.jpg");
-        File file = agent.downloadFile("https://i.ytimg.com/vi/9Nwn-TZfFUI/maxresdefault.jpg", "file", ".jpg");
+        File file = new File("pic1.jpg");
+        File downloaded = new File("Downloaded.jpg");
+        URL url = file.toURI().toURL();
+        BufferedInputStream reader = new BufferedInputStream(url.openStream());
+        FileOutputStream writer = new FileOutputStream(downloaded);
+        // execute
+        agent.downloadFile(reader, writer);
         long expected = url.openConnection().getContentLength();
-        long actual = file.length();
+        long actual = downloaded.length();
         assertThat(actual, is(expected));
-        file.delete();
+        downloaded.delete();
     }
 }
