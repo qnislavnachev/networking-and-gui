@@ -16,15 +16,11 @@ public class DownloadAgentTest {
 
     @Test
     public void downloadedFileSize() throws Exception {
-        //Set up
         DownloadAgent agent = new DownloadAgent();
         File file = new File("pic1.jpg");
-        File downloaded = new File("Downloaded.jpg");
         URL url = file.toURI().toURL();
-        BufferedInputStream reader = new BufferedInputStream(url.openStream());
-        FileOutputStream writer = new FileOutputStream(downloaded);
-        // execute
-        agent.downloadFile(reader, writer);
+        String link = url.toString();
+        File downloaded = agent.downloadFile(link, "file", ".jpg");
         long expected = url.openConnection().getContentLength();
         long actual = downloaded.length();
         assertThat(actual, is(expected));
