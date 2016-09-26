@@ -18,10 +18,9 @@ public class DownloadAgentTest {
     public void downloadedFileSize() throws Exception {
         DownloadAgent agent = new DownloadAgent();
         File file = new File("pic1.jpg");
-        URL url = file.toURI().toURL();
-        String link = url.toString();
+        String link = file.toURI().toString();
         File downloaded = agent.downloadFile(link, "file", ".jpg");
-        long expected = url.openConnection().getContentLength();
+        long expected = file.length();
         long actual = downloaded.length();
         assertThat(actual, is(expected));
         downloaded.delete();
