@@ -13,36 +13,42 @@ public class Server {
         this.port = port;
     }
 
+    private void closeQuietly(ServerSocket server) {
+        try {
+            if (server != null) {
+                server.close();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void closeQuietly(Socket socket) {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void start() {
         Date date = new Date();
         ServerSocket server = null;
-        Socket connection = null;
+        Socket socket = null;
         try {
             server = new ServerSocket(port);
             System.out.println("Server is set up and waiting for users...");
-            while (true) {
-                connection = server.accept();
-                System.out.println("User log into server!");
-                PrintStream printer = new PrintStream(connection.getOutputStream());
-                printer.println("Hello from the server ! " + date);
-            }
+            socket = server.accept();
+            System.out.println("User log into server!");
+            PrintStream printer = new PrintStream(socket.getOutputStream());
+            printer.println("Hello from the server ! " + date);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (server != null) {
-                try {
-                    server.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            closeQuietly(server);
+            closeQuietly(socket);
         }
     }
 }

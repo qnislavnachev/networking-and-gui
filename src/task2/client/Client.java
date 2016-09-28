@@ -8,6 +8,16 @@ import java.net.Socket;
 public class Client {
     private String message = null;
 
+    private void closeQuietly(Socket client) {
+        try {
+            if (client != null) {
+                client.close();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void join(String host, int port) {
         Socket client = null;
         try {
@@ -18,13 +28,7 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                if (client != null) {
-                    client.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            closeQuietly(client);
         }
         System.out.println("You left the server!");
     }
