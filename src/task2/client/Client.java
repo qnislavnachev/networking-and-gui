@@ -6,13 +6,14 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Client {
+    private String message = null;
 
     public void join(String host, int port) {
         Socket client = null;
         try {
             client = new Socket(host, port);
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            String message = reader.readLine();
+            message = reader.readLine();
             System.out.println(message);
         } catch (IOException e) {
             e.printStackTrace();
@@ -26,5 +27,9 @@ public class Client {
             }
         }
         System.out.println("You left the server!");
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
