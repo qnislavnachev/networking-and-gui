@@ -26,6 +26,7 @@ public class TestClient {
 
     @Test
     public void ClientReceiveMessage() throws Exception {
+        Thread.sleep(1000);
         client.join("localhost", 1111);
         String actual = client.getMessage();
         String expected = "Hello";

@@ -29,6 +29,7 @@ public class TestServer {
 
     @Test
     public void serverSendMessage() throws Exception {
+        Thread.sleep(1000);
         fakeClient.connect("localhost", 1111);
         String actual = fakeClient.getMessage();
         String expected = "Hello from the server ! " + date;
