@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class Server {
     private int port;
+    private Date date;
 
     public Server(int port) {
         this.port = port;
@@ -33,8 +34,12 @@ public class Server {
         }
     }
 
+    public Date getServerDate() {
+        return date;
+    }
+
     public void start() {
-        Date date = new Date();
+        date = new Date();
         ServerSocket server = null;
         Socket socket = null;
         try {

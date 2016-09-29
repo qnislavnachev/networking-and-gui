@@ -11,11 +11,9 @@ public class TestServer {
     private FakeClient fakeClient;
     private Server server;
     private Thread serverThread;
-    private Date date;
 
     @Before
     public void setUp(){
-        date = new Date();
         fakeClient = new FakeClient();
         server = new Server(1111);
         serverThread = new Thread(new Runnable() {
@@ -32,7 +30,7 @@ public class TestServer {
         Thread.sleep(1000);
         fakeClient.connect("localhost", 1111);
         String actual = fakeClient.getMessage();
-        String expected = "Hello from the server ! " + date;
+        String expected = "Hello from the server ! " + server.getServerDate();
         assertThat(actual, is(expected));
     }
 }
