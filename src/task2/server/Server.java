@@ -15,42 +15,16 @@ public class Server {
         this.currentDate = currentDate;
     }
 
-    private void closeQuietly(ServerSocket server) {
-        try {
-            if (server != null) {
-                server.close();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void closeQuietly(Socket socket) {
-        try {
-            if (socket != null) {
-                socket.close();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public void start() {
         Date date = currentDate.getCurrentDate();
-        ServerSocket server = null;
-        Socket socket = null;
-        try {
-            server = new ServerSocket(port);
+        try (ServerSocket server = new ServerSocket(port)) {
             System.out.println("Server is set up and waiting for users...");
-            socket = server.accept();
+            Socket socket = server.accept();
             System.out.println("User log into server!");
             PrintStream printer = new PrintStream(socket.getOutputStream());
             printer.println("Hello from the server ! " + date);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            closeQuietly(server);
-            closeQuietly(socket);
         }
     }
 }
