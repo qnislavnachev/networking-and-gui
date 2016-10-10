@@ -5,10 +5,10 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.List;
 
-public class Sender extends Thread {
+public class ClientNotifier extends Thread {
     private List<Socket> list;
 
-    public Sender(List<Socket> list) {
+    public ClientNotifier(List<Socket> list) {
         this.list = list;
     }
 

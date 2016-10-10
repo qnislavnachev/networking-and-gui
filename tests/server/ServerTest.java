@@ -8,23 +8,34 @@ import static org.junit.Assert.*;
 
 import task3.server.Server;
 
+import java.io.ByteArrayInputStream;
+import java.io.PrintStream;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 public class ServerTest {
     private FakeClient fakeClient;
     private FakeClient fakeClient1;
     private Server server;
+    private BlockingQueue<String> clientQueue;
+    private BlockingQueue<String> serverQueue;
+    private String clientMessage;
 
     @Before
     public void SetUp() {
-        server = new Server(1111);
-        fakeClient = new FakeClient("localhost", 1111);
-        fakeClient1 = new FakeClient("localhost", 1111);
+        clientMessage = "Server receive message";
+        clientQueue = new LinkedBlockingQueue<>();
+        serverQueue = new LinkedBlockingQueue<>();
+        server = new Server(1111, serverQueue);
         server.start();
+        fakeClient = new FakeClient("localhost", 1111, clientQueue, new ByteArrayInputStream(clientMessage.getBytes()));
+        fakeClient1 = new FakeClient("localhost", 1111, clientQueue, new ByteArrayInputStream(clientMessage.getBytes()));
     }
 
     @Test
     public void ServerSendMessage() throws Exception {
         fakeClient.start();
-        Thread.sleep(1000);
+        clientQueue.take();
         String actual = fakeClient.getMessage();
         String expected = "New client detected: 1";
         assertThat(actual, is(expected));
@@ -34,13 +45,24 @@ public class ServerTest {
     @Test
     public void ServerSendMessageToAll() throws Exception {
         fakeClient.start();
-        Thread.sleep(1000);
         fakeClient1.start();
-        Thread.sleep(1000);
+        clientQueue.take();
+        clientQueue.take();
         String actual1 = fakeClient.getMessage();
         String actual2 = fakeClient1.getMessage();
-        String expected =  "New client detected: 2";
-        assertThat(actual1, is(expected));
-        assertThat(actual2, is(expected));
+        String expected1 = "New client detected: 1";
+        String expected2 = "New client detected: 2";
+        assertThat(actual1, is(expected1));
+        assertThat(actual2, is(expected2));
+        server.shutDown();
+    }
+
+    @Test
+    public void ServerReceiveMessage() throws Exception {
+        fakeClient.start();
+        serverQueue.take();
+        String actual = server.getMessage();
+        assertThat(actual, is(clientMessage));
+        server.shutDown();
     }
 }
