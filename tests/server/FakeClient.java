@@ -27,6 +27,7 @@ public class FakeClient extends Thread {
             message = reader.readLine();
             System.out.println(message);
             serverNotify(fakeClient);
+            queue.put("element");
         } catch (SocketException ex) {
             System.out.println("Server fall down !");
         } catch (IOException e) {
@@ -44,9 +45,6 @@ public class FakeClient extends Thread {
     public void serverNotify(Socket socket) throws IOException, InterruptedException {
         PrintStream printer = new PrintStream(socket.getOutputStream());
         Scanner scanner = new Scanner(inputStream);
-        queue.put("element");
-        while (scanner.hasNext()) {
-            printer.println(scanner.nextLine());
-        }
+        printer.println(scanner.nextLine());
     }
 }

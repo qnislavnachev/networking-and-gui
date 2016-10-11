@@ -8,18 +8,15 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 
 public class Server extends Thread {
     private int port;
     private String message;
     private ServerSocket server = null;
     private List<Socket> listOfClients;
-    private BlockingQueue<String> queue;
 
-    public Server(int port, BlockingQueue<String> queue) {
+    public Server(int port) {
         this.port = port;
-        this.queue = queue;
         listOfClients = new ArrayList<>();
     }
 
@@ -60,13 +57,10 @@ public class Server extends Thread {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             while ((message = reader.readLine()) != null) {
                 System.out.println(message);
-                queue.put("element");
             }
         } catch (SocketException ex) {
             System.out.println("Client has left the server !");
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

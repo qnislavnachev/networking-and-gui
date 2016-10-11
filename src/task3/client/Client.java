@@ -4,18 +4,15 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Scanner;
-import java.util.concurrent.BlockingQueue;
 
 public class Client extends Thread {
     private String message;
     private String host;
     private int port;
     private InputStream inputStream;
-    private BlockingQueue<String> queue;
 
-    public Client(InputStream inputStream, BlockingQueue<String> queue) {
+    public Client(InputStream inputStream) {
         this.inputStream = inputStream;
-        this.queue = queue;
     }
 
     public void run() {
@@ -23,12 +20,9 @@ public class Client extends Thread {
             messageListener(client).start();
             PrintStream printer = new PrintStream(client.getOutputStream());
             Scanner scanner = new Scanner(inputStream);
-            queue.put("element");
             while (scanner.hasNext()) {
                 printer.println(scanner.nextLine());
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
