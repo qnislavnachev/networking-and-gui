@@ -3,6 +3,7 @@ package task3.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -28,10 +29,11 @@ public class Server extends Thread {
                 Socket socket = server.accept();
                 listOfClients.add(socket);
                 System.out.println("New client detected");
-                ClientNotifier notifier = new ClientNotifier(listOfClients);
-                notifier.start();
-                serverListener(socket);
-
+                clientNotifier(listOfClients).start();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                while ((message = reader.readLine()) != null) {
+                    System.out.println(message);
+                }
             }
         } catch (SocketException ex) {
             System.out.println("Server was closed !");
@@ -52,16 +54,20 @@ public class Server extends Thread {
         return message;
     }
 
-    private void serverListener(Socket socket) {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            while ((message = reader.readLine()) != null) {
-                System.out.println(message);
+    private Thread clientNotifier(List<Socket> list) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    for (Socket each : list) {
+                        PrintStream printer = new PrintStream(each.getOutputStream());
+                        printer.println("New client detected: " + list.size());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (SocketException ex) {
-            System.out.println("Client has left the server !");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        };
+        return thread;
     }
 }
